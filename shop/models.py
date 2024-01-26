@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.text import slugify
+
 
 # Create your models here.
 class Category(models.Model):
@@ -31,8 +33,6 @@ class Category(models.Model):
     
 
 
-
-from django.utils.text import slugify
 
 class Product(models.Model):
     """
