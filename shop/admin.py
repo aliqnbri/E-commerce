@@ -3,21 +3,29 @@ from django.contrib import admin
 # Register your models here.
 from .models import Category, Product
 
+
+# @admin.register(Product)
+class ProductsInline(admin.TabularInline):
+    model = Product
+    extra = 3  # Add three more products per category
+
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         'name',
         'slug',
-        'description',  # Added field to display description
         'products_count',  # Added field to display product count
+       
     ]
     list_filter = ['name']
-    readonly_fields = ['created', 'updated']  # Added to hide fields from edit
+   
     ordering = ['name']
     # Added field to search by description
-    search_fields = ['name', 'description']
+    search_fields = ['name',]
     inlines = [ProductsInline]  # Added inline admin form for managing products
-    fields = ['name', 'slug', 'description']  # Reordered fields
+    fields = ['name', 'slug',]  # Reordered fields
+    def products_count(self, obj):
+        return obj.products.count()
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -55,11 +63,10 @@ class ProductAdmin(admin.ModelAdmin):
     mark_as_unavailable.short_description = 'Mark as unavailable'
     restore_availability.short_description = 'Restore availability'
 
-@admin.register(Product)
-class ProductsInline(admin.TabularInline):
-    model = Product
-    extra = 3  # Add three more products per category
+    
 
 
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Product, ProductAdmin)
+
+
+# admin.site.register(Category, CategoryAdmin)
+# admin.site.register(Product, ProductAdmin)
