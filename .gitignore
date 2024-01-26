@@ -1,2 +1,5 @@
 .venv
 \onlineshop\__pycache__
+\shop\__pycache__
+\core\__pycache__
+.github
