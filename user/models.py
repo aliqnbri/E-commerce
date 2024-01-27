@@ -1,13 +1,13 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
-from django.db import models
-from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
-
-from .managers import CustomUserManager
-from django-phonenumber-field
 from phonenumber_field.modelfields import PhoneNumberField
+from django.utils.translation import gettext_lazy as _
+from .managers import CustomUserManager
+from django.utils import timezone
+from django.db import models
+
+# models.PhoneNumberField(_(""))
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    phone_number = PhoneNumberField(unique=True)
+    # phone_number = PhoneNumberField(unique=True)
     email = models.EmailField(_("email address"), unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
