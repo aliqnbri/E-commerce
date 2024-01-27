@@ -64,7 +64,7 @@ class Book(models.Model):
     available = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    categories = models.ManyToManyField(Category, related_name='books')  # Added ForeignKey to Category
+    categories = models.ManyToManyField(Category)  # Added ForeignKey to Category
 
     class Meta:
         ordering = ('title',)

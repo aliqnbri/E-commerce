@@ -3,12 +3,6 @@ from .models import Category, Author , Book
 
 # Register your models here.
 
-
-class BooksInline(admin.TabularInline):
-        model = Book
-        extra = 3  # Add three more books per category
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
@@ -21,8 +15,8 @@ class CategoryAdmin(admin.ModelAdmin):
     # readonly_fields = ['created', 'updated']  # Added to hide fields from edit
     ordering = ['name']
     search_fields = ['name', 'description']  # Added field to search by description
-    inlines = [BooksInline]  # Added inline admin form for managing books
     fields = ['name', 'slug', 'description']  # Reordered fields
+    prepopulated_fields = {'slug': ('name',)}
 
     def books_count(self, obj):
         return obj.books.count()
@@ -41,7 +35,8 @@ class AuthorAdmin(admin.ModelAdmin):
         'bio',
     ]
     list_filter = ['first_name', 'last_name']  # Added filter for first and last names
-    
+    prepopulated_fields = {'slug': ('first_name','last_name')}
+    search_fields = ['first_name','last_name',]
 
 
 
