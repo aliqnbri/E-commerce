@@ -5,11 +5,11 @@ from django.utils.text import slugify
 # Create your models here.
 class Category(models.Model):
     """
-    A Django model representing a category in a content management system.
+    A Django model representing a book category in an online bookstore.
     """
-    
-    name = models.CharField(max_length=200)
-    slug = models.SlugField(max_length = 200, unique = True)
+    name = models.CharField(max_length=200, unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
+    description = models.TextField(blank=True)
 
     class Meta:
 
@@ -17,10 +17,10 @@ class Category(models.Model):
         Meta class for the Category model.
         """
         ordering = ['name']
-        indexes = [models.Index(fields = ['name'])]
+        indexes = [models.Index(fields=['name'])]
         verbose_name = 'category'
         verbose_name_plural = 'categories'
-        
+
     def __str__(self):
         return self.name
 
@@ -30,88 +30,46 @@ class Category(models.Model):
         """
         self.slug = slugify(self.name)
         super().save(**kwargs)
-    
 
 
-
-class Product(models.Model):
+class Author(models.Model):
     """
-    A Django model representing a product in an e-commerce application.
+    A Django model representing a book author in an online bookstore.
+    """
+    first_name = models.CharField(max_length=255, verbose_name="Author's First Name")
+    last_name = models.CharField(max_length=255, verbose_name="Author's Last Name")
+    slug = models.SlugField(max_length=255, unique=True, verbose_name="Author Slug")
+    bio = models.TextField(blank=True, verbose_name="Author's Bio")
+
+    def __str__(self):
+        """
+        Returns the string representation of the Author object.
+        """
+        return f"{self.first_name} {self.last_name}"
+
+
+class Book(models.Model):
+
+    """
+    A Django model representing a specific book in an online bookstore.
     """
 
-    category = models.ForeignKey(
-        Category,
-        related_name='products',
-        on_delete=models.CASCADE,
-        verbose_name="Product Category"
-    )
-
-    name = models.CharField(
-        max_length=200,
-        verbose_name="Product Name"
-    )
-
-    slug = models.SlugField(
-        max_length=200,
-        unique=True,
-        verbose_name="Product Slug"
-    )
-
-    image = models.ImageField(
-        upload_to='products/%Y/%m/%d',
-        blank=True,
-        verbose_name="Product Image"
-    )
-
-    description = models.TextField(
-        blank=True,
-        verbose_name="Product Description"
-    )
-
-    price = models.DecimalField(
-        max_digits=10,
-        decimal_places=2,
-        verbose_name="Product Price"
-    )
-
-    available = models.BooleanField(
-        default=True,
-        verbose_name="Product Availability"
-    )
-
-    created = models.DateTimeField(
-        auto_now_add=True,
-        verbose_name="Product Creation Date"
-    )
-
-    updated = models.DateTimeField(
-        auto_now=True,
-        verbose_name="Product Updated Date"
-    )
+    title = models.CharField(max_length=255)
+    slug = models.SlugField(max_length=255, unique=True)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    isbn = models.CharField(max_length=13, unique=True)
+    cover = models.ImageField(upload_to='covers/', blank=True)
+    description = models.TextField(blank=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
+    available = models.BooleanField(default=True)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    categories = models.ManyToManyField(Category)  # Added ForeignKey to Category
 
     class Meta:
-        """
-        Meta class for the Product model.
-        """
-        ordering = ['name']
-        indexes = [
-            models.Index(fields=['id', 'slug']),
-            models.Index(fields=['name']),
-            models.Index(fields=['-created']),
-        ]
-        verbose_name = "Product"
-        verbose_name_plural = "Products"
+        ordering = ('title',)
 
     def __str__(self):
-        """
-        Returns the string representation of the Product object.
-        """
-        return self.name
+        return self.title
 
-    def save(self, **kwargs):
-        """
-        Overridden save method to create a unique slug based on the name.
-        """
-        self.slug = slugify(self.name)
-        super().save(**kwargs)
 
