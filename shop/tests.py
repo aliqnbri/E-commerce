@@ -63,3 +63,31 @@ class AuthorTest(TestCase):
         with self.assertRaises(IntegrityError):
             Author.objects.create(
                 first_name='J.K.', last_name='Rowling', bio='Another bio')
+
+
+class BookTest(TestCase):
+
+    def setUp(self):
+        """
+        Creates a book object for testing purposes.
+        """
+        self.author = Author.objects.create(
+            first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.')
+        self.category = Category.objects.create(
+            name='Classics', description='Classic Literature')
+        self.book = Book.objects.create(title='To Kill a Mockingbird', author=self.author, isbn='978-0-449-50420-7', cover='path/to/cover.jpg',
+                                        description='A coming-of-age story about a young girl growing up in the American South during the 1930s.', price=17.99, available=True, categories=self.category)
+
+    def test_book_creation(self):
+        """
+        Checks if the book was created successfully.
+        """
+        self.assertEqual(self.book.title, 'To Kill a Mockingbird')
+        self.assertEqual(self.book.author.first_name, 'Harper')
+        self.assertEqual(self.book.author.last_name, 'Lee')
+        self.assertTrue(self.book.isbn == '978-0-449-50420-7')
+        self.assertTrue(self.book.cover == 'path/to/cover.jpg')
+        self.assertEqual(self.book.description,
+                         'A coming-of-age story about a young girl growing up in the American South during the 1930s.')
+        self.assertEqual(self.book.price, 17.99)
+        self.assertTrue(self.book.available)
