@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.text import slugify
 from django.conf import settings
-
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class Category(models.Model):
@@ -11,7 +11,7 @@ class Category(models.Model):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-
+    tags = TaggableManager()
     class Meta:
 
         """
