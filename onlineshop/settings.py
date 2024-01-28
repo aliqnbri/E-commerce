@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'tailwind',
+    'frontend',
+    'django_browser_reload',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'onlineshop.urls'
@@ -131,3 +135,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CART_SESSION_ID = 'cart'
 
 AUTH_USER_MODEL = "user.CustomUser"
+
+TAILWIND_APP_NAME = 'frontend'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
