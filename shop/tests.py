@@ -91,3 +91,28 @@ class BookTest(TestCase):
                          'A coming-of-age story about a young girl growing up in the American South during the 1930s.')
         self.assertEqual(self.book.price, 17.99)
         self.assertTrue(self.book.available)
+
+
+class ReviewTest(TestCase):
+
+    def setUp(self):
+        """
+        Creates a book object for testing purposes.
+        """
+        self.book = Book.objects.create(title='To Kill a Mockingbird', author=Author.objects.create(first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.'),
+                                        isbn='978-0-449-50420-7', cover='path/to/cover.jpg', description='A coming-of-age story about a young girl growing up in the American South during the 1930s.', price=17.99, available=True)
+
+    def test_review_creation(self):
+        """
+        Checks if a review can be created successfully for a specific book.
+        """
+        rating = 5
+        comment = 'An excellent book!'
+
+        review = Review.objects.create(book=self.book, user=User.objects.create(
+            username='user1'), rating=rating, comment=comment)
+
+        self.assertEqual(review.book, self.book)
+        self.assertEqual(review.user, User.objects.get(username='user1'))
+        self.assertEqual(review.rating, rating)
+        self.assertEqual(review.comment, comment)
