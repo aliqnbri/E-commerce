@@ -3,6 +3,8 @@ from django.utils.text import slugify
 from django.conf import settings
 from taggit.managers import TaggableManager
 
+
+# <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
 class Category(models.Model):
     """

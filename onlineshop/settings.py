@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'coupons.apps.CouponsConfig',
-    'taggit'
+    'taggit',
     'tailwind',
     'frontend',
     'django_browser_reload',
