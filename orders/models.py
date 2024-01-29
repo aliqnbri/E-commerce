@@ -1,12 +1,12 @@
 from django.db import models
 
 # Create your models here.
-from shop.models import Book
+from shop.models import Product 
 from django.conf import settings
 
 
 class Order(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
@@ -35,7 +35,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(Order,
                               related_name='items',
                               on_delete=models.CASCADE)
-    book = models.ForeignKey(Book,
+    product = models.ForeignKey(Product,
                              related_name='order_items',
                              on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10,

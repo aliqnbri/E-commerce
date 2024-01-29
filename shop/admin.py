@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Author, Book
+from .models import Category, Author, Product
 
 # Register your models here.
 
@@ -10,7 +10,7 @@ class CategoryAdmin(admin.ModelAdmin):
         'name',
         'slug',
         'description',  # Added field to display description
-        'books_count',  # Added field to display book count
+        'products_count',  # Added field to display product count
     ]
     list_filter = ['name']
     # readonly_fields = ['created', 'updated']  # Added to hide fields from edit
@@ -19,10 +19,10 @@ class CategoryAdmin(admin.ModelAdmin):
     fields = ['name', 'slug', 'description']  # Reordered fields
     prepopulated_fields = {'slug': ('name',)}
 
-    def books_count(self, obj):
-        return obj.books.count()
+    def products_count(self, obj):
+        return obj.products.count()
 
-    books_count.short_description = 'Number of Books'
+    products_count.short_description = 'Number of products'
 
 
 @admin.register(Author)
@@ -39,8 +39,8 @@ class AuthorAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'last_name',]
 
 
-@admin.register(Book)
-class BookAdmin(admin.ModelAdmin):
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
 
     list_display = [
         'title',
@@ -65,14 +65,14 @@ class BookAdmin(admin.ModelAdmin):
             obj.available = False
             obj.save()
         self.message_user(
-            request, f'{queryset.count()} books marked as unavailable')
+            request, f'{queryset.count()} products marked as unavailable')
 
     def restore_availability(self, request, queryset):
         for obj in queryset.filter(available=False):
             obj.available = True
             obj.save()
         self.message_user(
-            request, f'{queryset.count()} books restored to availability')
+            request, f'{queryset.count()} products restored to availability')
 
     mark_as_unavailable.short_description = 'Mark as unavailable'
     restore_availability.short_description = 'Restore availability'

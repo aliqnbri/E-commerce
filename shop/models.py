@@ -51,10 +51,10 @@ class Author(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Book(models.Model):
+class Product(models.Model):
 
     """
-    A Django model representing a specific book in an online bookstore.
+    A Django model representing a specific product in an online bookstore.
     """
 
     title = models.CharField(max_length=255)
@@ -81,11 +81,11 @@ class Review(models.Model):
     A Django model representing a review for a specific book.
     """
 
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     comment = models.TextField(max_length=1000, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Review for {self.book.title} by {self.user.username}"
+        return f"Review for {self.product.title} by {self.user.username}"
