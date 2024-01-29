@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     'user.apps.UserConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
+    'payment.apps.PaymentConfig',
+    'coupons.apps.CouponsConfig',
+    'taggit',
     'tailwind',
     'frontend',
     'django_browser_reload',
@@ -55,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'onlineshop.urls'
