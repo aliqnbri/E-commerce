@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'core.apps.CoreConfig',
     'products.apps.ProductsConfig',
-    'user.apps.UserConfig',
+    'accounts.apps.AccountsConfig',
     'cart.apps.CartConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
@@ -137,7 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CART_SESSION_ID = 'cart'
 
-AUTH_USER_MODEL = "user.CustomUser"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 TAILWIND_APP_NAME = 'frontend'
 

@@ -1,4 +1,6 @@
 from django.db import models
+from core.models import BaseModel
+
 from django.utils.text import slugify
 from django.conf import settings
 from taggit.managers import TaggableManager
@@ -6,7 +8,7 @@ from taggit.managers import TaggableManager
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
-class Category(models.Model):
+class Category(BaseModel):
     """
     A Django model representing a book category in an online bookstore.
     """
@@ -14,6 +16,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     tags = TaggableManager()
+    image = models.ImageField(upload_to='covers/catgories/', height_field=None, width_field=None, max_length=None)
     class Meta:
 
         """
@@ -51,7 +54,7 @@ class Author(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-class Product(models.Model):
+class Product(BaseModel):
 
     """
     A Django model representing a specific product in an online bookstore.
@@ -61,12 +64,10 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
-    cover = models.ImageField(upload_to='covers/', blank=True)
+    image = models.ImageField(upload_to='covers/products/', blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     categories = models.ManyToManyField(Category)  # Added ForeignKey to Category
 
     class Meta:
@@ -76,16 +77,15 @@ class Product(models.Model):
         return self.title
 
 
-class Review(models.Model):
+class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
-
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     comment = models.TextField(max_length=1000, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    
 
     def __str__(self):
         return f"Review for {self.product.title} by {self.user.username}"
