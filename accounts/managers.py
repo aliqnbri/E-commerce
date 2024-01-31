@@ -1,6 +1,8 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 
+
+
 class CustomUserManager(BaseUserManager):
     """
     Custom user model manager where email is the unique identifiers
@@ -31,11 +33,15 @@ class CustomUserManager(BaseUserManager):
         extra_fields.setdefault("is_active", True)
         extra_fields.setdefault("role", 'admin')
 
+        # if not username:
+        #     raise ValueError (_("The username must be set"))
+
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
+       
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
-        # if CustomUser.objects.filter(is_superuser=True ,role='admin').exists():
+        # if User.objects.filter(is_superuser=True ,role='admin').exists():
         #     raise ValueError('Only one Admin user Can Exists.')    
         return self.create_user(email, password, **extra_fields)
 
