@@ -41,11 +41,13 @@ class OrderModelTests(TestCase):
         self.assertEqual(get_total_cost(), 40.00)
 
     def test_order_item_quantity_must_be_positive(self):
+        user = User.objects.create(username='testuser',)
         author = Author.objects.create(
             first_name='J.K', last_name='Rowling', bio='Famous author of the Harry Potter series.')
         product = Product.objects.create(
             title='Product 1', price=10.00, author=author)
-        order = Order.objects.create()
+        order = Order.objects.create(customer=user, first_name='John', last_name='Doe',
+                                     address='123 Main Street', postal_code='12345', city='Anytown')
 
         # Try creating order item with negative quantity
         with self.assertRaises(ValidationError):
@@ -68,7 +70,9 @@ class OrderModelTests(TestCase):
                 order=None, product=product, quantity=1, price=20.00)
 
     def test_order_item_cannot_be_created_for_non_existing_product(self):
-        order = Order.objects.create()
+        user = User.objects.create(username='testuser',)
+        order = Order.objects.create(customer=user, first_name='John', last_name='Doe',
+                                     address='123 Main Street', postal_code='12345', city='Anytown')
 
         with self.assertRaises(ObjectDoesNotExist):
             OrderItem.objects.create(
