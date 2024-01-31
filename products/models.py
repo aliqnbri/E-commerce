@@ -2,9 +2,10 @@ from django.db import models
 from core.models import BaseModel
 
 from django.utils.text import slugify
-from django.conf import settings
-from taggit.managers import TaggableManager
 
+from taggit.managers import TaggableManager
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
@@ -81,7 +82,7 @@ class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     comment = models.TextField(max_length=1000, blank=True)

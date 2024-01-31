@@ -1,12 +1,13 @@
 from django.db import models
-from django.conf import settings
+
 from core.models import BaseModel
 # Create your models here.
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class Payment(BaseModel):
     # Payment user
-    customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    customer = models.ForeignKey(User, on_delete=models.CASCADE)
 
     # Payment order
     order = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
@@ -23,7 +24,7 @@ class Payment(BaseModel):
 
 class Transaction(BaseModel):
     customer = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+        User, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     address1 = models.CharField(max_length=255)
