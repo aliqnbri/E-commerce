@@ -1,14 +1,14 @@
 from django.db import models
 from core.models import BaseModel
-
 from django.utils.text import slugify
-
 from taggit.managers import TaggableManager
 from django.contrib.auth import get_user_model
-User = get_user_model()
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
+
+User = get_user_model()
+
 class Category(BaseModel):
     """
     A Django model representing a book category in an online bookstore.
@@ -17,7 +17,9 @@ class Category(BaseModel):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     tags = TaggableManager()
-    image = models.ImageField(upload_to='covers/catgories/', height_field=None, width_field=None, max_length=None)
+    image = models.ImageField(upload_to='covers/catgories/',
+                              height_field=None, width_field=None, max_length=None)
+
     class Meta:
 
         """
@@ -39,13 +41,16 @@ class Category(BaseModel):
         super().save(**kwargs)
 
 
-class Author(models.Model):
+class Author(BaseModel):
     """
     A Django model representing a book author in an online bookstore.
     """
-    first_name = models.CharField(max_length=255, verbose_name="Author's First Name")
-    last_name = models.CharField(max_length=255, verbose_name="Author's Last Name")
-    slug = models.SlugField(max_length=255, unique=True, verbose_name="Author Slug")
+    first_name = models.CharField(
+        max_length=255, verbose_name="Author's First Name")
+    last_name = models.CharField(
+        max_length=255, verbose_name="Author's Last Name")
+    slug = models.SlugField(max_length=255, unique=True,
+                            verbose_name="Author Slug")
     bio = models.TextField(blank=True, verbose_name="Author's Bio")
 
     def __str__(self):
@@ -69,7 +74,8 @@ class Product(BaseModel):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
-    categories = models.ManyToManyField(Category)  # Added ForeignKey to Category
+    categories = models.ManyToManyField(
+        Category)  # Added ForeignKey to Category
 
     class Meta:
         ordering = ('title',)
@@ -83,10 +89,11 @@ class Review(BaseModel):
     A Django model representing a review for a specific book.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')
-    rating = models.IntegerField(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name='reviews')
+    rating = models.IntegerField(
+        choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
     comment = models.TextField(max_length=1000, blank=True)
-    
 
     def __str__(self):
         return f"Review for {self.product.title} by {self.user.username}"

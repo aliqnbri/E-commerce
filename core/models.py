@@ -4,13 +4,22 @@ import uuid
 
 # Create your models here.
 
+class SoftDeleteManager(models.Manager):
+    def delete(self, *args, **kwargs):
+        if kwargs.get('force_delete', False):
+            super().delete(*args, **kwargs)
+        else:
+            for obj in self.get_queryset(*args, **kwargs):
+                obj.is_deleted = True
+                obj.save()
+
 
 class BaseModel(models.Model):
-    uid = models.UUIDField(
-        primary_key=True, editable=False, default=uuid.uuid4)
     created = models.DateField(auto_now_add=True)
     updated = models.DateField(auto_now_add=True)
+    is_deleted = models.BooleanField(default=False)
 
+    objects = SoftDeleteManager()
     class Meta:
         abstract = True
 
