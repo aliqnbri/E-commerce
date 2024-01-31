@@ -21,7 +21,7 @@ class Payment(BaseModel):
     ))
     
 
-class Transaction(models.Model):
+class Transaction(BaseModel):
     customer = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
@@ -37,4 +37,4 @@ class Transaction(models.Model):
         ('re', 'Refunded'),
     ))
     zip_code = models.CharField(max_length=10)
-    # country = models.CharField(max_length=2, choices=COUNTRY_CHOICES)
+    

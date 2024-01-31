@@ -3,9 +3,9 @@ from django.db import models
 # Create your models here.
 from products.models import Product 
 from django.conf import settings
+from core.models import BaseModel
 
-
-class Order(models.Model):
+class Order(BaseModel):
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -14,8 +14,6 @@ class Order(models.Model):
 
     postal_code = models.CharField(max_length=20)
     city = models.CharField(max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
     paid = models.BooleanField(default=False)
 
     class Meta:
@@ -31,7 +29,7 @@ class Order(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
 
-class OrderItem(models.Model):
+class OrderItem(BaseModel):
     order = models.ForeignKey(Order,
                               related_name='items',
                               on_delete=models.CASCADE)
