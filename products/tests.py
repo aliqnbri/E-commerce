@@ -65,7 +65,7 @@ class AuthorTest(TestCase):
                 first_name='J.K.', last_name='Rowling', bio='Another bio')
 
 
-class BookTest(TestCase):
+class ProductTest(TestCase):
 
     def setUp(self):
         """
@@ -75,10 +75,10 @@ class BookTest(TestCase):
             first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.')
         self.category = Category.objects.create(
             name='Classics', description='Classic Literature')
-        self.book = Book.objects.create(title='To Kill a Mockingbird', author=self.author, isbn='978-0-449-50420-7', cover='path/to/cover.jpg',
+        self.book = Product.objects.create(title='To Kill a Mockingbird', author=self.author, isbn='978-0-449-50420-7', cover='path/to/cover.jpg',
                                         description='A coming-of-age story about a young girl growing up in the American South during the 1930s.', price=17.99, available=True, categories=self.category)
 
-    def test_book_creation(self):
+    def test_product_creation(self):
         """
         Checks if the book was created successfully.
         """

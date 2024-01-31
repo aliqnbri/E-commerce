@@ -5,14 +5,14 @@ from products.models import Product
 # Create your tests here.
 
 
-
-
-
 class CouponTestCase(TestCase):
     def setUp(self):
-        self.product = Product.objects.create(name="Test Product", price=100.00)
-        self.discount_percent = ProductDiscount.objects.create(product=self.product, discount_percent=10)
-        self.discount_amount = ProductDiscount.objects.create(product=self.product, discount_amount=20)
+        self.product = Product.objects.create(
+            title="Test Product", price=100.00)
+        self.discount_percent = ProductDiscount.objects.create(
+            product=self.product, discount_percent=10)
+        self.discount_amount = ProductDiscount.objects.create(
+            product=self.product, discount_amount=20)
 
     def test_discounted_price_with_percent(self):
         discounted_price = self.discount_percent.calculate_discounted_price()
