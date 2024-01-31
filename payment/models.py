@@ -1,10 +1,10 @@
 from django.db import models
 from django.conf import settings
-
+from core.models import BaseModel
 # Create your models here.
 
 
-class Payment(models.Model):
+class Payment(BaseModel):
     # Payment user
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
 
@@ -19,9 +19,7 @@ class Payment(models.Model):
         ('failed', 'Failed'),
         ('refunded', 'Refunded'),
     ))
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
+    
 
 class Transaction(models.Model):
     customer = models.ForeignKey(
