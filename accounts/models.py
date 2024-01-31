@@ -7,14 +7,13 @@ from django.db import models
 
 # models.PhoneNumberField(_(""))
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=255,unique=True)
+    username = models.CharField(max_length=255,unique=True, blank=True)
     # phone_number = PhoneNumberField(unique=True)
     email = models.EmailField(unique=True)
-    # is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True) # can login
     ROLE_CHOICES = (
         ('admin', 'Admin'),
-        ('staff', 'Staff'),
         ('operator', 'Operator'),
         ('customer', 'Customer'),
     )
