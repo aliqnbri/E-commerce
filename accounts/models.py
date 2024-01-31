@@ -7,7 +7,7 @@ from django.db import models
 
 # models.PhoneNumberField(_(""))
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=255,unique=True, blank=True)
+    username = models.CharField(max_length=255, blank=True)
     # phone_number = PhoneNumberField(unique=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)

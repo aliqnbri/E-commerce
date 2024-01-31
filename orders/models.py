@@ -1,12 +1,13 @@
 from django.db import models
+from products.models import Product
+from core.models import BaseModel
+
 
 # Create your models here.
-from products.models import Product 
-
-from core.models import BaseModel
 
 from django.contrib.auth import get_user_model
 User = get_user_model()
+
 
 class Order(BaseModel):
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -37,8 +38,8 @@ class OrderItem(BaseModel):
                               related_name='items',
                               on_delete=models.CASCADE)
     product = models.ForeignKey(Product,
-                             related_name='order_items',
-                             on_delete=models.CASCADE)
+                                related_name='order_items',
+                                on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
