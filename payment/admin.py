@@ -12,6 +12,6 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(Transaction)
 class TransactionAdmin(admin.ModelAdmin):
-    list_display = ('customer', 'payment', 'name', 'city', 'state')
+    list_display = ( 'payment', 'name', 'city', 'state')
     list_filter = ('state',)
     search_fields = ('customer__username', 'name', 'city')

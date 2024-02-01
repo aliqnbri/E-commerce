@@ -7,47 +7,52 @@ from django.contrib.auth import get_user_model
 from orders.models import Order
 from django.core.exceptions import ValidationError
 
-
+User = get_user_model()
 class PaymentModelTest(TestCase):
 
     @classmethod
     def setUpTestData(cls):
         # Set up non-modified objects used by all test methods
-        user = get_user_model().objects.create(id = 1,username='testuser')
-        order = Order.objects.create(id =1 ,customer=user, first_name='John', last_name='Doe',
+        user = User.objects.create(id = 1,username='testuser',email = 'test@test.com')
+        order = Order.objects.create(id =2 ,customer=user, first_name='John', last_name='Doe',
                                      address='123 Main Street', postal_code='12345', city='Anytown')
         Payment.objects.create(id = 1, customer=user, order=order,
                                amount=100.00, status='pending')
 
-    def test_customer_label(self):
-        payment = Payment.objects.get(id=1)
-        field_label = payment._meta.get_field('customer').verbose_name
-        self.assertEquals(field_label, 'customer')
 
-    def test_order_label(self):
-        payment = Payment.objects.get(id=1)
-        field_label = payment._meta.get_field('order').verbose_name
-        self.assertEquals(field_label, 'order')
+    def test_creating_payment(self):
+        user = User.objects.create(id = 8,username='testuser_2',email='test_2@test.com')
+        order = Order.objects.create(customer=user)
+        payment = Payment.objects.create(customer=user, order=order, amount=100.00, status='pending')
+        self.assertEqual(payment.customer, user)
+        self.assertEqual(payment.order, order)
+        self.assertEqual(payment.amount, 100.00)
+        self.assertEqual(payment.status, 'pending')
 
-    def test_amount_label(self):
-        payment = Payment.objects.get(id=1)
-        field_label = payment._meta.get_field('amount').verbose_name
-        self.assertEquals(field_label, 'amount')
+    def test_invalid_amount(self):
+        user = User.objects.create(id=9, username='testuser',email='test@test.com')
+        order = Order.objects.create(customer=user)
+        with self.assertRaises(ValueError):
+            Payment.objects.create(customer=user, order=order, amount=-100.00, status='pending')
 
-    def test_status_label(self):
-        payment = Payment.objects.get(id=1)
-        field_label = payment._meta.get_field('status').verbose_name
-        self.assertEquals(field_label, 'status')
+    def test_invalid_order(self):
+        user = User.objects.create(id=1, username='testuser2',email='test2@test.com')
+        with self.assertRaises(ValueError):
+            Payment.objects.create(customer=user, amount=100.00, status='pending')
+
+    def test_create_payment_with_missing_customer(self):
+        order = Order.objects.create(customer=None)
+        with self.assertRaises(ValidationError):
+            Payment.objects.create(order=order, amount=100.00, status='pending')
 
 
 class TransactionModelTests(TestCase):
 
     def test_creating_transaction(self):
-        user = get_user_model().objects.create(id=1, username='testuser')
-        payment = Payment.objects.create(id=1, amount=100, status='pending')
+        
+        payment = Payment.objects.create(id=2, amount=100, status='pending')
         transaction = Transaction.objects.create(id=1,
-            customer=user, payment=payment, name='John Doe', address1='123 Main Street', city='Anytown', state='CA', zip_code='90210')
-        self.assertEqual(transaction.customer, user)
+            payment=payment, name='John Doe', address1='123 Main Street', city='Anytown', state='CA', zip_code='90210')
         self.assertEqual(transaction.payment, payment)
         self.assertEqual(transaction.name, 'John Doe')
         self.assertEqual(transaction.address1, '123 Main Street')
@@ -67,18 +72,18 @@ class TransactionModelTests(TestCase):
 
     def test_invalid_state(self):
         with self.assertRaises(ValidationError):
-            Transaction.objects.create(id=1,
-                customer=None, payment=None, name='John Doe', address1='123 Main Street', city='Anytown', state='AA', zip_code='90210'
+            Transaction.objects.create(id=3,
+            payment=None, name='John Doe', address1='123 Main Street', city='Anytown', state='AA', zip_code='90210'
             )
 
     def test_transaction_with_missing_payment(self):
-        user = get_user_model().objects.create(id=1,username='testuser')
+       
         with self.assertRaises(ValidationError):
-            Transaction.objects.create(id = 1,
-                customer=user, name='John Doe', address1='123 Main Street', city='Anytown', state='CA', zip_code='90210')
+            Transaction.objects.create(id = 4,
+                 name='John Doe', address1='123 Main Street', city='Anytown', state='CA', zip_code='90210')
 
     def test_transaction_with_missing_customer(self):
-        payment = Payment.objects.create(id=1, amount=100, status='pending')
+        payment = Payment.objects.create(id=5, amount=100, status='pending')
         with self.assertRaises(ValidationError):
             Transaction.objects.create(id=1 ,payment=payment, name='John Doe',
                                        address1='123 Main Street', city='Anytown', state='CA', zip_code='90210')
