@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'products.apps.ProductsConfig',
     'accounts.apps.AccountsConfig',
-    'cart.apps.CartConfig',
+    'home.apps.HomeConfig',
     'orders.apps.OrdersConfig',
     'payment.apps.PaymentConfig',
     'coupons.apps.CouponsConfig',

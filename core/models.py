@@ -13,22 +13,31 @@ class SoftDeleteManager(models.Manager):
                 obj.is_deleted = True
                 obj.save()
 
+import uuid
 
 class BaseModel(models.Model):
-    created = models.DateField(auto_now_add=True)
-    updated = models.DateField(auto_now_add=True)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_deleted = models.BooleanField(default=False)
-
     objects = SoftDeleteManager()
     class Meta:
         abstract = True
+    STATUS_CHOICES = (
+        ('dr', 'Draft'),
+        ('pu', 'Published'),
+        ('ar', 'Archived'),
+    )
+    status = models.CharField(max_length=2, choices=STATUS_CHOICES, default='dr')
+    created = models.DateTimeField(auto_now_add=True, editable=False)
+    updated = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True  # Set the abstract attribute to True to indicate that this model is intended to be used as a base class and not as a concrete model
+
+    # def save(self, *args, **kwargs):
+    #     # Add custom logic before saving the model
+    #     super().save(*args, **kwargs)  # Call the original save method
+
+    def __str__(self):
+        return f"{self.__class__.__name__} - {self.uuid}"
 
 
-
-
-class ShopInfo(models.Model):
-    shop_name = models.CharField(max_length=255, verbose_name='Shop Name')
-    address = models.CharField(max_length=255, verbose_name='Address')
-    phone_number = models.CharField(max_length=12, verbose_name='Phone Number')
-    locations = models.TextField(verbose_name='Locations')
-    extra = models.TextField(verbose_name='Extra Info')
