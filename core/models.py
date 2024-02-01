@@ -1,5 +1,5 @@
 from django.db import models
-import uuid
+
 
 
 # Create your models here.
@@ -19,7 +19,9 @@ class BaseModel(models.Model):
     updated = models.DateField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)
 
+    #soft_delete_object
     objects = SoftDeleteManager()
+    #object_delete
     class Meta:
         abstract = True
 

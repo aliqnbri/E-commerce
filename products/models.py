@@ -16,7 +16,7 @@ class Category(BaseModel):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    tags = TaggableManager()
+    tags = TaggableManager() #shoud eport to products
     image = models.ImageField(upload_to='covers/catgories/',
                               height_field=None, width_field=None, max_length=None)
 
@@ -88,6 +88,7 @@ class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')

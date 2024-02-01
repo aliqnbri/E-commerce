@@ -1,17 +1,19 @@
 from django.test import TestCase
 from .models import Coupon
 
-from products.models import Product
+from products.models import Product, Author
 # Create your tests here.
 
 
 class CouponTestCase(TestCase):
     def setUp(self):
+        self.author = Author.objects.create(
+            first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.')
         self.product = Product.objects.create(
-            title="Test Product", price=100.00)
-        self.discount_percent = ProductDiscount.objects.create(
+            title="Test Product", price=100.00,author=self.author)
+        self.discount_percent = Coupon.objects.create(
             product=self.product, discount_percent=10)
-        self.discount_amount = ProductDiscount.objects.create(
+        self.discount_amount = Coupon.objects.create(
             product=self.product, discount_amount=20)
 
     def test_discounted_price_with_percent(self):
@@ -23,8 +25,8 @@ class CouponTestCase(TestCase):
         self.assertEqual(discounted_price, 80.00)
 
     def test_no_discount(self):
-        no_discount = ProductDiscount.objects.create(product=self.product)
-        no_discounted_price = no_discount.calculate_discounted_price()
+        no_discount = Coupon.objects.create(product=self.product)
+        no_discounted_price = Coupon.calculate_discounted_price()
         self.assertEqual(no_discounted_price, 100.00)
 
 
