@@ -13,7 +13,7 @@ class Order(BaseModel):
     """
     Reprisent orders of customers
     """
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer_id = models.ForeignKey(User, on_delete=models.CASCADE)
     city = models.CharField(max_length=100)
     paid = models.BooleanField(default=False)
 
