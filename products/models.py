@@ -16,10 +16,10 @@ class Category(BaseModel):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    tags = TaggableManager()
+    
     image = models.ImageField(upload_to='covers/catgories/',
                               height_field=None, width_field=None, max_length=None)
-
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
     class Meta:
 
         """
@@ -68,7 +68,7 @@ class Product(BaseModel):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
     image = models.ImageField(upload_to='covers/products/', blank=True)
     description = models.TextField(blank=True)
@@ -76,7 +76,7 @@ class Product(BaseModel):
     available = models.BooleanField(default=True)
     categories = models.ManyToManyField(
         Category)  # Added ForeignKey to Category
-
+    tags = TaggableManager()
     class Meta:
         ordering = ('title',)
 
@@ -88,8 +88,8 @@ class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(
         choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
