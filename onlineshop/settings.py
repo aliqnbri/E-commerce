@@ -37,6 +37,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'core.apps.CoreConfig',
+    'products.apps.ProductsConfig',
+    'accounts.apps.AccountsConfig',
+    'cart.apps.CartConfig',
+    'orders.apps.OrdersConfig',
+    'payment.apps.PaymentConfig',
+    'coupons.apps.CouponsConfig',
+    'taggit',
+    'tailwind',
+    'frontend',
+    'django_browser_reload',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'onlineshop.urls'
@@ -121,3 +133,16 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+CART_SESSION_ID = 'cart'
+
+AUTH_USER_MODEL = "accounts.CustomUser"
+
+TAILWIND_APP_NAME = 'frontend'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+
+NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
