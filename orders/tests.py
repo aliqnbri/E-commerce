@@ -92,7 +92,7 @@ class OrderModelTests(TestCase):
 class OrderModelTests(TestCase):
 
     def test_creating_order(self):
-        user = User.objects.create(username='testuser',)
+        user = User.objects.create(id =1 ,username='testuser',email='test@test.com')
         order = Order.objects.create(customer=user, first_name='John', last_name='Doe',
                                      address='123 Main Street', postal_code='12345', city='Anytown')
         self.assertEqual(order.customer, user)
@@ -104,7 +104,7 @@ class OrderModelTests(TestCase):
         self.assertFalse(order.paid)
 
     def test_getting_total_cost(self):
-        user = User.objects.create(username='testuser')
+        user = User.objects.create(id= 2, username='testuser2', email='test2@test.com')
         order = Order.objects.create(customer=user, first_name='John', last_name='Doe',
                                      address='123 Main Street', postal_code='12345', city='Anytown')
         author = Author.objects.create(
