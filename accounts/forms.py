@@ -19,7 +19,7 @@ class RegisterForm(forms.ModelForm):
 
     """
 
-    password = forms.CharField(widget=forms.PasswordInput)
+    password = forms.CharField(label='Password',widget=forms.PasswordInput)
     password_2 = forms.CharField(
         label='Confirm Password', widget=forms.PasswordInput)
 
@@ -45,7 +45,8 @@ class RegisterForm(forms.ModelForm):
         password = cleaned_data.get("password")
         password_2 = cleaned_data.get("password_2")
         if password is not None and password != password_2:
-            self.add_error("password_2", "Your passwords must match")
+            raise forms.ValidationError('Passwords don\'t match.')
+            # self.add_error("password_2", "Your passwords must match")
         return cleaned_data
 
 
