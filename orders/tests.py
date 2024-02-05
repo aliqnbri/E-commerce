@@ -4,10 +4,12 @@ from products.models import Category, Author, Review, Product
 from .models import Order, Order, OrderItem
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ObjectDoesNotExist ,ValidationError
+
+
+
 # Create your tests here.
 
 User = get_user_model()
-
 
 class OrderModelTests(TestCase):
 
@@ -85,15 +87,6 @@ class OrderModelTests(TestCase):
 
 
 
-from django.test import TestCase
-from core.models import BaseModel
-from products.models import Category, Author, Review, Product
-from .models import Order, Order, OrderItem
-from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist ,ValidationError
-# Create your tests here.
-
-User = get_user_model()
 
 
 class OrderModelTests(TestCase):

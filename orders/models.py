@@ -51,19 +51,19 @@ class OrderItem(BaseModel):
 
 
 class Payment(BaseModel):
-    # Payment user
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    # Payment order
-    order = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
+    """
+    Payment of orders 
+    """
+    # Payment use
+    order_id = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2,validators=[MinValueValidator(Decimal('0.00'))])
     
     status = models.CharField(max_length=10, choices=(
-        ('pending', 'Pending'),
-        ('processing', 'Processing'),
-        ('paid', 'Paid'),
-        ('failed', 'Failed'),
-        ('refunded', 'Refunded'),
+        ('pe', 'Pending'),
+        ('pr', 'Processing'),
+        ('pa', 'Paid'),
+        ('fad', 'Failed'),
+        ('re', 'Refunded'),
     ))
     def validate_amount(self):
         if self.amount < Decimal('0.00'):
@@ -75,12 +75,5 @@ class Transaction(BaseModel):
     address1 = models.CharField(max_length=255)
     address2 = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=255)
-    state = models.CharField(max_length=2, choices=(
-        ('pe', 'Pending'),
-        ('pr', 'Processing'),
-        ('pa', 'Paid'),
-        ('fa', 'Failed'),
-        ('re', 'Refunded'),
-    ))
     zip_code = models.CharField(max_length=10)
     
