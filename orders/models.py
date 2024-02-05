@@ -2,11 +2,12 @@ from django.db import models
 from products.models import Product
 from core.models import BaseModel
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, MaxValueValidator
+
 User = get_user_model()
 
 
 # Create your models here.
-
 
 
 class Order(BaseModel):
@@ -32,11 +33,11 @@ class Order(BaseModel):
 
 class OrderItem(BaseModel):
     order_id = models.ForeignKey(Order,
-                              related_name='items',
-                              on_delete=models.CASCADE)
+                                 related_name='items',
+                                 on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product,
-                                related_name='order_items',
-                                on_delete=models.CASCADE)
+                                   related_name='order_items',
+                                   on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10,
                                 decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
@@ -48,16 +49,15 @@ class OrderItem(BaseModel):
         return self.price * self.quantity
 
 
-
-
 class Payment(BaseModel):
     """
     Payment of orders 
     """
     # Payment use
     order_id = models.ForeignKey('orders.Order', on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2,validators=[MinValueValidator(Decimal('0.00'))])
-    
+    amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[
+                                 MinValueValidator(0)])
+
     status = models.CharField(max_length=10, choices=(
         ('pe', 'Pending'),
         ('pr', 'Processing'),
@@ -65,9 +65,11 @@ class Payment(BaseModel):
         ('fad', 'Failed'),
         ('re', 'Refunded'),
     ))
+
     def validate_amount(self):
-        if self.amount < Decimal('0.00'):
+        if self.amount < 0:
             raise ValueError('Amount cannot be negative.')
+
 
 class Transaction(BaseModel):
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
@@ -76,4 +78,3 @@ class Transaction(BaseModel):
     address2 = models.CharField(max_length=255, blank=True)
     city = models.CharField(max_length=255)
     zip_code = models.CharField(max_length=10)
-    
