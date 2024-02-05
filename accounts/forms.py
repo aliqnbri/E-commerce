@@ -5,8 +5,13 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth import get_user_model
 
 
-
 User = get_user_model()
+
+
+class LoginForm(forms.Form):
+    email = forms.EmailField()
+    password = forms.CharField(widget=forms.PasswordInput)
+
 
 class RegisterForm(forms.ModelForm):
     """
@@ -15,7 +20,8 @@ class RegisterForm(forms.ModelForm):
     """
 
     password = forms.CharField(widget=forms.PasswordInput)
-    password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    password_2 = forms.CharField(
+        label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -49,7 +55,8 @@ class UserAdminCreationForm(forms.ModelForm):
     fields, plus a repeated password.
     """
     password = forms.CharField(widget=forms.PasswordInput)
-    password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+    password_2 = forms.CharField(
+        label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
@@ -68,7 +75,7 @@ class UserAdminCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         # Save the provided password in hashed format
-        user = super(UserAdminCreationForm,self).save(commit=False)
+        user = super(UserAdminCreationForm, self).save(commit=False)
         user.set_password(self.cleaned_data["password"])
         if commit:
             user.save()
@@ -93,8 +100,6 @@ class UserAdminChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-
-
 # from .models import CustomUser
 
 
@@ -110,5 +115,3 @@ class UserAdminChangeForm(forms.ModelForm):
 #     class Meta:
 #         model = CustomUser
 #         fields = ("email",)
-
-
