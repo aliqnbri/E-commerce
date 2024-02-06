@@ -3,11 +3,13 @@ from core.models import BaseModel
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
 
 User = get_user_model()
+
 
 class Category(BaseModel):
     """
@@ -16,10 +18,12 @@ class Category(BaseModel):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    
+
     image = models.ImageField(upload_to='covers/catgories/',
                               height_field=None, width_field=None, max_length=None)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
+
     class Meta:
 
         """
@@ -32,6 +36,9 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('products:product_list_by_category', args=[self.slug])
 
     def save(self, **kwargs):
         """
@@ -77,11 +84,15 @@ class Product(BaseModel):
     categories = models.ManyToManyField(
         Category)  # Added ForeignKey to Category
     tags = TaggableManager()
+
     class Meta:
         ordering = ('title',)
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('products:product_detail', args=[slef.id, self.slug])
 
 
 class Review(BaseModel):
