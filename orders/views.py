@@ -24,3 +24,8 @@ def cart_remove(request,porduct_id):
     product = get_object_or_404(Product , id= porduct_id)
     cart.remove(product)
     return redirect ('orders:cart_detail')
+
+
+def cart_detail(request):
+    cart = Cart (request)
+    return  render (request,'orders/cart_detail.html', {'cart':cart})   
