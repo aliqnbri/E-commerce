@@ -33,8 +33,7 @@ class RegisterForm(forms.ModelForm):
         Verify email is available.
         '''
         email = self.cleaned_data.get('email')
-        qs = User.objects.filter(email=email)
-        if qs.exists():
+        if User.objects.filter(email=email).exists():
             raise forms.ValidationError("email is taken")
         return email
 
@@ -106,6 +105,13 @@ class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ['email']
+
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        if User.objects.filter(email=data).exists():
+            raise forms.ValidationError('Email already in use.')
+        return data    
 
 
 
