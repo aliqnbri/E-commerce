@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from products.models import Product
+from .models import OrderItem ,Order
 from .manager import Cart
-from .forms import CartAddProductForm
+from .forms import CartAddProductForm , OrderCreateForm
 
 # Create your views here.
 
@@ -33,3 +34,5 @@ def cart_detail(request):
                             'quantity': item['quantity'],
                             'override': True})
     return  render (request,'orders/cart_detail.html', {'cart':cart})   
+
+
