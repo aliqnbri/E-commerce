@@ -26,7 +26,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['email','phone_number']
 
     def clean_email(self):
         '''
@@ -36,6 +36,21 @@ class RegisterForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("email is taken")
         return email
+
+    def clean_phoneNumber(self):
+        '''
+        Verify phonenumber is available.
+        '''
+        phone_number = self.cleaned_data.get('phone_number')
+        # Validate the phone number for Iran
+        if not re.match(r'^(?:\(\+98\)|\(09\))\d{10}$', phone_number):
+            raise ValidationError(
+                "Invalid phone number format for Iran. It should start with '+98' or '09' followed by 10 digits.")
+
+        
+        if User.objects.filter(phone_number=phone_number).exists():
+            raise forms.ValidationError("phone number already exists")
+        return phone_number
 
     def clean(self):
         '''
@@ -104,13 +119,18 @@ class UserAdminChangeForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email']
+        fields = ['email','phone_number']
 
 
     def clean_email(self):
         data = self.cleaned_data['email']
         if User.objects.filter(email=data).exists():
             raise forms.ValidationError('Email already in use.')
+        return data    
+    def clean_phonenumber(self):
+        data = self.cleaned_data['phone_number']
+        if User.objects.filter(phone_number=data).exists():
+            raise forms.ValidationError('Phone number already in use.')
         return data    
 
 

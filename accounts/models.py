@@ -27,18 +27,15 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    def clean(self):
-        # Validate the phone number for Iran
-        if not re.match(r'^\+98\d{10}$', self.phone_number):
-            raise ValidationError(
-                "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
-
-        if not re.match(r'^[\w.@+-]+$', self.username):
-            raise ValidationError(
-                "Invalid characters in the username. Use only letters, numbers, and @/./+/-/_ characters.")
+    # def clean(self):
+    #     if not re.match(r'^[\w.@+-]+$', self.username):
+    #             raise ValidationError(
+    #                 "Invalid characters in the username. Use only letters, numbers, and @/./+/-/_ characters.")
 
     def __str__(self):
-        return self.uuid
+        if self.username:
+            return self.username
+        return self.USERNAME_FIELD
 
 
 class Address(BaseModel):
