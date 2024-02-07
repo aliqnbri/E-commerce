@@ -9,6 +9,7 @@ User = get_user_model()
 
 
 class LoginForm(forms.Form):
+    username = forms.CharField(max_length=25, required=False)
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
 
@@ -99,6 +100,31 @@ class UserAdminChangeForm(forms.ModelForm):
         # This is done here, rather than on the field, because the
         # field does not have access to the initial value
         return self.initial["password"]
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['email']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # from .models import CustomUser

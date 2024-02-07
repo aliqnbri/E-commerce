@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm ,RegisterForm
+from .forms import LoginForm ,RegisterForm  ,UserEditForm
 
 from django.contrib.auth.decorators import login_required
 # Create your views here.
@@ -48,3 +48,15 @@ def register(request):
     return render(request,
                   'accounts/register.html',
                   {'user_form': user_form})        
+
+@login_required
+def edit(request):
+    if request.method == 'POST':
+        user_form = UserEditForm(instance=request.user, data = request.POST)
+        if user_form.is_valid():
+            user_form.save()
+    else:
+        user_form = UserEditForm(instance=request.user)                    
+
+
+    return render(request , 'accounts/edit.html',{'user_form':user_form})    
