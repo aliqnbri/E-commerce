@@ -38,7 +38,7 @@ class Category(BaseModel):
         return self.name
 
     def get_absolute_url(self):
-        return reverse('products:product_list_by_category', args=[self.slug])
+        return reverse('products:products_list_by_category', args=[self.slug])
 
     def save(self, **kwargs):
         """
@@ -92,7 +92,7 @@ class Product(BaseModel):
         return self.title
 
     def get_absolute_url(self):
-        return reverse('products:product_detail', args=[slef.id, self.slug])
+        return reverse('products:product_detail', args=[self.id, self.slug])
 
 
 class Review(BaseModel):

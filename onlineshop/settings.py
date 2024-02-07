@@ -44,10 +44,11 @@ INSTALLED_APPS = [
     'orders.apps.OrdersConfig',
     'coupons.apps.CouponsConfig',
     'taggit',
-    'tailwind',
-    'frontend',
-    'django_browser_reload',
 ]
+#     'tailwind',
+#     'frontend',
+#     'django_browser_reload',
+# ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -128,6 +129,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static']
+
+
+
+MEDIA_URL = 'media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -139,13 +148,13 @@ CART_SESSION_ID = 'cart'
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-TAILWIND_APP_NAME = 'frontend'
+# TAILWIND_APP_NAME = 'frontend'
 
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
+# INTERNAL_IPS = [
+#     "127.0.0.1",
+# ]
 
-NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
+# NPM_BIN_PATH = r"C:\Program Files\nodejs\npm.cmd"
 
 
 LOGIN_REDIRECT_URL = 'dashboard'
