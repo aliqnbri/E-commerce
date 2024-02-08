@@ -14,5 +14,6 @@ class CartAddProductForm(forms.Form):
 
 
 class OrderCreateForm(forms.ModelForm):
-    model = Order
-    fields = ['customer_id','paid']
+    class Meta:
+        model = Order
+        fields = ['customer_id','city','paid']
