@@ -45,14 +45,14 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = [
         'title',
         'slug',
-        'author',
+        'author_id',
         'isbn',
         'price',
         'available',
         'created',
         'updated',
     ]
-    list_filter = ['available', 'created', 'updated', 'author']
+    list_filter = ['available', 'created', 'updated', 'author_id']
     list_editable = ['price', 'available',]
     list_per_page = 10  # Set pagination to 10 items per page
     prepopulated_fields = {'slug': ('title',)}

@@ -3,11 +3,13 @@ from core.models import BaseModel
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
 
 User = get_user_model()
+
 
 class Category(BaseModel):
     """
@@ -16,9 +18,11 @@ class Category(BaseModel):
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
-    tags = TaggableManager()
+
     image = models.ImageField(upload_to='covers/catgories/',
                               height_field=None, width_field=None, max_length=None)
+    parent = models.ForeignKey(
+        'self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
 
     class Meta:
 
@@ -32,6 +36,9 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse('products:products_list_by_category', args=[self.slug])
 
     def save(self, **kwargs):
         """
@@ -76,6 +83,7 @@ class Product(BaseModel):
     available = models.BooleanField(default=True)
     categories = models.ManyToManyField(
         Category)  # Added ForeignKey to Category
+    tags = TaggableManager()
 
     class Meta:
         ordering = ('title',)
@@ -83,13 +91,16 @@ class Product(BaseModel):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('products:product_detail', args=[self.id, self.slug])
+
 
 class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(
+    product_id = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(
         choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])

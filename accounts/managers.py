@@ -1,6 +1,30 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
+# from django.contrib.auth import get_user_model
+# from .models import CustomUser
 
+
+
+# class EmailAuthBackend:
+#     '''
+#     Authenticate useing an E-mail address
+#     '''
+
+#     def authenticate(self, request, email=None, password=None):
+#         try:
+#             user = CustomUser.objects.get(email=email)
+#             if user.check_password(password):
+#                 return user
+#             return None
+
+#         except (User.DoesNotExist, User.MultipleObjectsReturned):
+#             return None
+
+#     def get_user(self, user_id):
+#         try:
+#             return User.objects.get(pk=user_id)
+#         except User.DoesNotExist:
+#             return None
 
 
 class CustomUserManager(BaseUserManager):
@@ -17,10 +41,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("The Email must be set"))
 
         if not password:
-            raise ValueError (_("The Password must be set"))    
+            raise ValueError(_("The Password must be set"))
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password) # change user passwoed
+        user.set_password(password)  # change user passwoed
         user.save()
         return user
 
@@ -38,15 +62,14 @@ class CustomUserManager(BaseUserManager):
 
         if extra_fields.get("is_staff") is not True:
             raise ValueError(_("Superuser must have is_staff=True."))
-       
+
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
         # if User.objects.filter(is_superuser=True ,role='admin').exists():
-        #     raise ValueError('Only one Admin user Can Exists.')    
+        #     raise ValueError('Only one Admin user Can Exists.')
         return self.create_user(email, password, **extra_fields)
 
-
-    def create_staffuser(self, email ,password ):
+    def create_staffuser(self, email, password):
         """
         Create and save a SuperUser with the given email and password.
         """
@@ -60,4 +83,3 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get("is_superuser") is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
         return self.create_user(email, password, **extra_fields)
-        
