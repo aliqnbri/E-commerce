@@ -1,30 +1,30 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.utils.translation import gettext_lazy as _
 # from django.contrib.auth import get_user_model
-from django.contrib.auth.models import User
+# from .models import CustomUser
 
 
 
-class EmailAuthBackend:
-    '''
-    Authenticate useing an E-mail address
-    '''
+# class EmailAuthBackend:
+#     '''
+#     Authenticate useing an E-mail address
+#     '''
 
-    def authenticate(self, request, username=None, password=None):
-        try:
-            user = User.objects.get(email=username)
-            if user.check_password(password):
-                return user
-            return None
+#     def authenticate(self, request, email=None, password=None):
+#         try:
+#             user = CustomUser.objects.get(email=email)
+#             if user.check_password(password):
+#                 return user
+#             return None
 
-        except (User.DoesNotExist, User.MultipleObjectsReturned):
-            return None
+#         except (User.DoesNotExist, User.MultipleObjectsReturned):
+#             return None
 
-    def get_user(self, user_id):
-        try:
-            return CustomUser.objects.get(pk=user_id)
-        except User.DoesNotExist:
-            return None
+#     def get_user(self, user_id):
+#         try:
+#             return User.objects.get(pk=user_id)
+#         except User.DoesNotExist:
+#             return None
 
 
 class CustomUserManager(BaseUserManager):

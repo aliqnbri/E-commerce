@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django_browser_reload.middleware.BrowserReloadMiddleware',
+    # 'django_browser_reload.middleware.BrowserReloadMiddleware',
 ]
 
 ROOT_URLCONF = 'onlineshop.urls'
@@ -163,7 +163,7 @@ LOGOUT_URL =  'logout'
 
 
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-AUTHENTICATION_BACKENDS = [
-    # 'accounts.CustomUser'
-    'accounts.managers.EmailAuthBackend',
-]
+# AUTHENTICATION_BACKENDS = [
+#     # 'accounts.CustomUser'
+#     'accounts.managers.EmailAuthBackend',
+# ]
