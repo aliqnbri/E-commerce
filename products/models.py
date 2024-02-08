@@ -75,7 +75,7 @@ class Product(BaseModel):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
     image = models.ImageField(upload_to='covers/products/', blank=True)
     description = models.TextField(blank=True)
@@ -99,7 +99,7 @@ class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     product_id = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(

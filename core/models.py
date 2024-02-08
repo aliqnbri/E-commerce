@@ -16,7 +16,7 @@ class SoftDeleteManager(models.Manager):
 import uuid
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    # uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_deleted = models.BooleanField(default=False)
     objects = SoftDeleteManager()
     #object_delete
