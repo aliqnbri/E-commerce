@@ -1,5 +1,5 @@
 from django.db import models
-from products.models import Product
+from product.models import Product
 # Create your models here.
 
 class Coupon(models.Model):

@@ -68,7 +68,7 @@ class Product(BaseModel):
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    author_id = models.ForeignKey(Author, on_delete=models.CASCADE)
+    author = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
     image = models.ImageField(upload_to='covers/products/', blank=True)
     description = models.TextField(blank=True)

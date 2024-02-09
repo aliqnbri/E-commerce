@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'payment.apps.PaymentConfig',
     'coupon.apps.CouponConfig',
+    'taggit',
 ]
 
 MIDDLEWARE = [
