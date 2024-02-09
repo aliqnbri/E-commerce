@@ -1,0 +1,64 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Panel</title>
+    {% tailwind_css %}
+    
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Dashboard Panel -->
+    <div class="flex h-screen bg-gray-200">
+
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 text-white">
+
+            <!-- Sidebar Header -->
+            <div class="flex items-center justify-center h-16 border-b border-gray-700">
+                <span class="text-2xl font-bold">Dashboard</span>
+            </div>
+
+            <!-- Sidebar Navigation -->
+            <nav class="mt-4">
+                <a href="#" class="block px-4 py-2 text-sm">Dashboard</a>
+                <a href="#" class="block px-4 py-2 text-sm">Analytics</a>
+                <a href="#" class="block px-4 py-2 text-sm">Orders</a>
+                <a href="#" class="block px-4 py-2 text-sm">Products</a>
+                <!-- Add more navigation links as needed -->
+            </nav>
+
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Main Content Header -->
+            <header class="bg-white border-b">
+                <div class="flex items-center justify-between p-4">
+                    <span class="text-lg font-semibold">Welcome, User!</span>
+                    <button class="text-gray-600 focus:outline-none">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Body -->
+            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 p-4">
+                <!-- Your content goes here -->
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h2 class="text-xl font-semibold mb-4">Overview</h2>
+                    <p>Your dashboard content goes here.</p>
+                </div>
+            </main>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

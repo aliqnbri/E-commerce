@@ -1,0 +1,59 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minimalist Bookstore</title>
+    {% tailwind_css %}
+    
+</head>
+<body>
+    <header class="bg-gray-900 text-white text-center">
+        <h1 class="font-bold text-3xl md:text-4xl">Minimalist Bookstore</h1>
+        <p class="mb-4">Your one-stop shop for the best books</p>
+    </header>
+
+    <main class="py-4 px-4">
+        <section class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-4">Explore our book collection</h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                <a href="#" class="bg-white shadow-md rounded-md p-4">
+                    <img src="book-1.jpg" alt="Book Cover" class="w-full h-40 object-cover">
+                    <h3 class="text-gray-800 font-bold mb-2">The Lord of the Rings</h3>
+                    <p class="text-gray-600">By J.R.R. Tolkien</p>
+                </a>
+
+                <a href="#" class="bg-white shadow-md rounded-md p-4">
+                    <img src="book-2.jpg" alt="Book Cover" class="w-full h-40 object-cover">
+                    <h3 class="text-gray-800 font-bold mb-2">Harry Potter and the Sorcerer's Stone</h3>
+                    <p class="text-gray-600">By J.K. Rowling</p>
+                </a>
+
+                <a href="#" class="bg-white shadow-md rounded-md p-4">
+                    <img src="book-3.jpg" alt="Book Cover" class="w-full h-40 object-cover">
+                    <h3 class="text-gray-800 font-bold mb-2">Pride and Prejudice</h3>
+                    <p class="text-gray-600">By Jane Austen</p>
+                </a>
+
+                <a href="#" class="bg-white shadow-md rounded-md p-4">
+                    <img src="book-4.jpg" alt="Book Cover" class="w-full h-40 object-cover">
+                    <h3 class="text-gray-800 font-bold mb-2">To Kill a Mockingbird</h3>
+                    <p class="text-gray-600">By Harper Lee</p>
+                </a>
+
+                <a href="#" class="bg-white shadow-md rounded-md p-4">
+                    <img src="book-5.jpg" alt="Book Cover" class="w-full h-40 object-cover">
+                    <h3 class="text-gray-800 font-bold mb-2">The Adventures of Sherlock Holmes</h3>
+                    <p class="text-gray-600">By Arthur Conan Doyle</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white text-center py-4 px-4">
+        &copy; 2024 Minimalist Bookstore
+    </footer>
+</body>
+</html>
