@@ -21,6 +21,7 @@ def cart_add(request, product_id):
 
 @require_POST
 def cart_remove(request,porduct_id):
+    print('mostafa')
     cart = Cart(request)
     product = get_object_or_404(Product , id=porduct_id)
     cart.remove(product)
