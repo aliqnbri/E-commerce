@@ -12,7 +12,9 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(max_length=13, unique=True, null=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
-    is_active = models.BooleanField(default=True)  # can login
+    is_active = models.BooleanField(default=True)
+    is_verified = models.BooleanField(default=False)
+    otp = models.CharField(max_length=6, null=True, blank=True)
     ROLE_CHOICES = (
         ('ad', 'Admin'),
         ('op', 'Operator'),
@@ -34,11 +36,6 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 class CustomerProfile(BaseModel):
     user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
     
-
-
-
-
-
 
 
 
