@@ -88,8 +88,8 @@ class Review(BaseModel):
     """
     A Django model representing a review for a specific book.
     """
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    product_id = models.ForeignKey(
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(
         Product, on_delete=models.CASCADE, related_name='reviews')
     rating = models.IntegerField(
         choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')])
