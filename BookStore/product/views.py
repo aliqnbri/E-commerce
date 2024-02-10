@@ -4,6 +4,18 @@ from rest_framework.response import Response
 from rest_framework import status
 from product.models import Product, Category, Review
 from product import serializers
+from django.views.generic import ListView
+
+
+class ProductListView(ListView):
+    model = Product
+    template_name = 'product/index.html'
+    context_object_name = 'products'
+    paginate_by = 2
+    queryset = Product.objects.all()
+    # def get_queryset(self):
+    #     return Product.objects.all()
+
 
 
 class ProductList(APIView):

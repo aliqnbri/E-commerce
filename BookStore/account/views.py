@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from account.serializer import LoginSerailizer, VerifyAccountSerializer, UserSerializer
@@ -19,13 +20,13 @@ class LoginAPI(APIView):
 
                 if user is None:
                     return Response({
-                        'status': 400,
+                        'status': status.HTTP_400_BAD_REQUEST,
                         'message': 'Invalid Password',
                         'data': {}})
 
                 if user.is_verified is False:
                     return Response({
-                        'status': 400,
+                        'status': status.HTTP_400_BAD_REQUEST,
                         'message': 'your account is not verified',
                         'data': serializer.errors
                     })
@@ -37,7 +38,7 @@ class LoginAPI(APIView):
                 }
 
             return Response({
-                'status': 400,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Sth went Wrong',
                 'data': serializer.errors
             })
@@ -54,19 +55,23 @@ class RegisterAPI(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response({
-                    'status': 200,
+                    'status': status.HTTP_200_OK,
                     'message': 'Registeration Successfuly check Email',
                     'data': serializer.errors
                 })
 
             return Response({
-                'status': 400,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Sth went Wrong',
                 'data': serializer.errors
             })
 
         except Exception as e:
-            print(e)
+            return Response({
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': 'An error occurred during registration.',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class VerifyOTP (APIView):
@@ -80,22 +85,26 @@ class VerifyOTP (APIView):
                 user = CutomUser.objects.filter(email=email)
                 if not user.exists():
                     return Response({
-                        'status': 400,
+                        'status': status.HTTP_400_BAD_REQUEST,
                         'message': 'somethin went wrong',
                         'data': 'Invalid Emil',
                     })
                 if user[0].otp != otp:
                     return Response({
-                        'status': 200,
+                        'status': status.HTTP_200_OK,
                         'message': 'Verified !',
                         'data': {},
                     })
 
             return Response({
-                'status': 400,
+                'status': status.HTTP_400_BAD_REQUEST,
                 'message': 'Sth went Wrong',
                 'data': serializer.errors
             })
 
         except Exception as e:
-            print(e)
+            return Response({
+                'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
+                'message': 'An error occurred during verifiy.',
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
