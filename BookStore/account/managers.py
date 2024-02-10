@@ -18,6 +18,13 @@ class CustomUserManager(BaseUserManager):
 
         if not password:
             raise ValueError (_("The Password must be set"))    
+
+        if extra_fields.get("is_staff") is True:
+            raise ValueError(_("Superuser must have is_staff=False."))
+       
+        if extra_fields.get("is_superuser") is True:
+            raise ValueError(_("Superuser must have is_superuser=False."))  
+
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
         user.set_password(password) # change user passwoed

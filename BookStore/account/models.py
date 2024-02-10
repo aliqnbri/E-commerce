@@ -9,7 +9,7 @@ import re
 
 class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=13, unique=True)
+    phone_number = models.CharField(max_length=13, unique=True ,null=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)  # can login
@@ -27,15 +27,15 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 
     objects = CustomUserManager()
 
-    def clean(self):
-        # Validate the phone number for Iran
-        if not re.match(r'^\+98\d{10}$', self.phone_number):
-            raise ValidationError(
-                "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
+    # def clean(self):
+    #     # Validate the phone number for Iran
+    #     if not re.match(r'^\+98\d{10}$', self.phone_number):
+    #         raise ValidationError(
+    #             "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
 
-        if not re.match(r'^[\w.@+-]+$', self.username):
-            raise ValidationError(
-                "Invalid characters in the username. Use only letters, numbers, and @/./+/-/_ characters.")
+        # if not re.match(r'^[\w.@+-]+$', self.username):
+        #     raise ValidationError(
+        #         "Invalid characters in the username. Use only letters, numbers, and @/./+/-/_ characters.")
 
     def __str__(self):
         return self.uuid

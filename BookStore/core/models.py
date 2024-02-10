@@ -2,6 +2,7 @@ from django.db import models
 
 
 
+
 # Create your models here.
 
 class SoftDeleteManager(models.Manager):
@@ -13,15 +14,9 @@ class SoftDeleteManager(models.Manager):
                 obj.is_deleted = True
                 obj.save()
 
-import uuid
 
 class BaseModel(models.Model):
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     is_deleted = models.BooleanField(default=False)
-    objects = SoftDeleteManager()
-    #object_delete
-    class Meta:
-        abstract = True
     STATUS_CHOICES = (
         ('dr', 'Draft'),
         ('pu', 'Published'),
@@ -31,6 +26,9 @@ class BaseModel(models.Model):
     created = models.DateTimeField(auto_now_add=True, editable=False)
     updated = models.DateTimeField(auto_now=True)
 
+    objects = SoftDeleteManager()
+    #object_delete
+    
     class Meta:
         abstract = True  # Set the abstract attribute to True to indicate that this model is intended to be used as a base class and not as a concrete model
 
