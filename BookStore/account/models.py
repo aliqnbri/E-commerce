@@ -9,7 +9,7 @@ import re
 
 class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=13, unique=True ,null=True)
+    phone_number = models.CharField(max_length=13, unique=True, null=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)  # can login
@@ -23,29 +23,30 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
     # email and passwrod required by default
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 
-    # def clean(self):
-    #     # Validate the phone number for Iran
-    #     if not re.match(r'^\+98\d{10}$', self.phone_number):
-    #         raise ValidationError(
-    #             "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
-
-        # if not re.match(r'^[\w.@+-]+$', self.username):
-        #     raise ValidationError(
-        #         "Invalid characters in the username. Use only letters, numbers, and @/./+/-/_ characters.")
-
     def __str__(self):
-        return self.uuid
+        return f"{self.username}"
+
+
+class CustomerProfile(BaseModel):
+    user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
+    
+
+
+
+
+
+
 
 
 class Address(BaseModel):
     """
     Address Model for user's address 
     """
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)
