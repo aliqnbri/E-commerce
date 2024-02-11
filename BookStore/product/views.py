@@ -5,6 +5,7 @@ from rest_framework import status
 from product.models import Product, Category, Review
 from product import serializers
 from django.views.generic import ListView
+from django.core.paginator  import Paginator
 
 
 class ProductListView(ListView):
