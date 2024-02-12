@@ -2,13 +2,18 @@ from django.db import models
 from core.models import BaseModel
 from django.core.validators import MinValueValidator, MinValueValidator
 from decimal import Decimal
-# Create your models here.
+from django.contrib.auth import get_user_model
+from order.models import Order
+
+User = get_user_model()
+
+
 class Payment(BaseModel):
     """
     Payment of orders 
     """
-    # Payment use
-    order = models.ForeignKey('order.Order', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[
                                  MinValueValidator(Decimal('0.00'))])
 
@@ -24,11 +29,12 @@ class Payment(BaseModel):
         if self.amount < Decimal('0.00'):
             raise ValueError('Amount cannot be negative.')
 
+    def __str__(self):
+        return f'Transaction #{self.id} - User: {self.user.username}, Amount: {self.amount}, Status: {self.status}'
+
 
 class Transaction(BaseModel):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
     payment = models.ForeignKey(Payment, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    address1 = models.CharField(max_length=255)
-    address2 = models.CharField(max_length=255, blank=True)
-    city = models.CharField(max_length=255)
     zip_code = models.CharField(max_length=10)
+    description = models.TextField()
