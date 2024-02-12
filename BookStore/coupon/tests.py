@@ -1,66 +1,45 @@
 from django.test import TestCase
-from .models import Coupon
+from coupon.models import Coupon
+from product.models import Product, Author
 
-from products.models import Product, Author
+from datetime import date
 # Create your tests here.
 
 
-class CouponTestCase(TestCase):
+class CouponModelTests(TestCase):
+
     def setUp(self):
         self.author = Author.objects.create(
-            first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.')
-        self.product = Product.objects.create(
-            title="Test Product", price=100.00,author=self.author)
-        self.discount_percent = Coupon.objects.create(
-            product=self.product, discount_percent=10)
-        self.discount_amount = Coupon.objects.create(
-            product=self.product, discount_amount=20)
+            first_name='John', last_name='Doe', slug='john-doe', bio='lives in Tehran')
+        self.product = Product.objects.create(title='Test Product', slug='test-product', author=self.author,
+                                              isbn='123456789', price=100.00, available=True, description='some description')
+        self.coupon_percent = Coupon.objects.create(
+            product=self.product, code='TEST1', discount_percent=10, expiration_date=date.today())
+        self.coupon_amount = Coupon.objects.create(
+            product=self.product, code='TEST2', discount_amount=20, expiration_date=date.today())
 
-    def test_discounted_price_with_percent(self):
-        discounted_price = self.discount_percent.calculate_discounted_price()
-        self.assertEqual(discounted_price, 90.00)
+    def test_calculate_discounted_price_percent(self):
+        discounted_price = self.coupon_percent.calculate_discounted_price()
+        expected_price = 100.00 * (1 - (10/100))  # 10% discount
+        self.assertEqual(discounted_price, expected_price)
 
-    def test_discounted_price_with_amount(self):
-        discounted_price = self.discount_amount.calculate_discounted_price()
-        self.assertEqual(discounted_price, 80.00)
+    def test_calculate_discounted_price_amount(self):
+        discounted_price = self.coupon_amount.calculate_discounted_price()
+        expected_price = 100.00 - 20.00  # $20 discount
+        self.assertEqual(discounted_price, expected_price)
 
-    def test_no_discount(self):
-        no_discount = Coupon.objects.create(product=self.product)
-        no_discounted_price = Coupon.calculate_discounted_price()
-        self.assertEqual(no_discounted_price, 100.00)
+    def test_calculate_discounted_price_no_discount(self):
+        no_discount_coupon = Coupon.objects.create(
+            product=self.product, code='TEST3', expiration_date=date.today())
+        discounted_price = no_discount_coupon.calculate_discounted_price()
+        self.assertEqual(discounted_price, 100.00)  # No discount applied
 
+    def test_coupon_is_active(self):
+        active_coupon = Coupon.objects.create(
+            product=self.product, code='TEST4', is_active=True, expiration_date=date.today())
+        self.assertTrue(active_coupon.is_active)
 
-# class CouponTest(TestCase):
-
-#     def test_create_coupon(self):
-#         coupon = Coupon.objects.create(
-#             code='123456',
-#             discount_amount=10.0,
-#             expiration_date='2023-10-04',
-#             is_active=True
-#         )
-
-#         self.assertEqual(coupon.code, '123456')
-#         self.assertEqual(coupon.discount_amount, 10.0)
-#         self.assertEqual(coupon.expiration_date, '2023-10-04')
-#         self.assertEqual(coupon.is_active, True)
-
-#     def test_validate_coupon_code_length(self):
-#         with self.assertRaises(ValidationError):
-#             Coupon.objects.create(code='123', discount_amount=10.0,
-#                                   expiration_date='2023-10-04', is_active=True)
-
-#     def test_validate_discount_value(self):
-#         with self.assertRaises(ValidationError):
-#             Coupon.objects.create(
-#                 code='123456', discount=-10.0, expiration_date='2023-10-04', is_active=True)
-
-#     def test_validate_expiration_date(self):
-#         with self.assertRaises(ValidationError):
-#             Coupon.objects.create(
-#                 code='123456', discount=10.0, expiration_date='2022-10-04', is_active=True)
-
-#     def test_validate_is_active_value(self):
-#         with self.assertRaises(ValidationError):
-#             Coupon.objects.create(
-#                 code='123456', discount=10.0, expiration_date='2023-10-04', is_active=False)
+    def test_coupon_is_not_active(self):
+        inactive_coupon = Coupon.objects.create(
+            product=self.product, code='TEST5', is_active=False, expiration_date=date.today())
+        self.assertFalse(inactive_coupon.is_active)
