@@ -1,14 +1,12 @@
-from rest_framework import serializers
-from account.models import CustomUser, CustomerProfile
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
-
-
+from account.models import CustomUser, CustomerProfile
+from rest_framework.validators import UniqueValidator
+from rest_framework import serializers
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod 
+    @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
 
@@ -18,13 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 
         return token
-
-
-
-
-
-
-
+ 
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
@@ -84,4 +76,24 @@ class LoginSerailizer(serializers.ModelSerializer):
     email = serializers.EmailField()
     password = serializers.CharField()
 
-   
+
+
+from product.models import Category , Product , Review
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Product
+        fields = '__all__'        
+
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = '__all__'        
