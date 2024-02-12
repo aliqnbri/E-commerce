@@ -3,7 +3,7 @@ from django.contrib.auth.password_validation import validate_password
 from account.models import CustomUser, CustomerProfile
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
-
+from product.models import Category , Product , Review
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -78,7 +78,7 @@ class LoginSerailizer(serializers.ModelSerializer):
 
 
 
-from product.models import Category , Product , Review
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:

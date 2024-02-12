@@ -32,10 +32,11 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'payment.apps.PaymentConfig',
     'coupon.apps.CouponConfig',
-    'taggit',
     'debug_toolbar',
     'rest_framework',
     'rest_framework_simplejwt',
+    'taggit',
+    'corsheaders'
     
 
 ]
@@ -49,6 +50,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'BookStore.urls'
@@ -173,3 +176,5 @@ SIMPLE_JWT = {
     'AUTH_COOKIE_SAMESITE': 'Lax',
     # This can be 'Lax', 'Strict', or None to disable the flag.
 }
+
+CORS_ALLOW_ALL_ORIGINS = True

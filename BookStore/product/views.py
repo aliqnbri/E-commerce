@@ -1,81 +1,51 @@
-# from django.shortcuts import render
-# from rest_framework.views import APIView
-# from rest_framework.response import Response
-# from rest_framework import status
-# from product.models import Product, Category, Review
-# from product import serializers
-# from django.views.generic import ListView
-# from django.core.paginator  import Paginator
+from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from product.models import Product, Category, Review
+from product import serializers
+from django.views.generic import ListView
+from django.core.paginator import Paginator
 
 
-# class ProductListView(ListView):
-#     model = Product
-#     template_name = 'product/index.html'
-#     context_object_name = 'products'
-#     paginate_by = 2
-#     queryset = Product.objects.all()
-#     # def get_queryset(self):
-#     #     return Product.objects.all()
+class ProductListView(ListView):
+    """
+    List of products 
+    """
+    model = Product
+    template_name = 'product/index.html'
+    context_object_name = 'products'
+    paginate_by = 3
+
+    def get_queryset(self):
+        """queryset to include only available products"""
+        queryset = Product.objects.filter(available=True).order_by('-created')
+        return queryset
 
 
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'product/product_detail.html'
+    context_object_name = 'product'
 
-# class ProductList(APIView):
-#     def get(self, request):
-#         products = Product.objects.all()
-#         serializer = serializers.ProductSerializer(data=request.data)
-#         return Response(serializer.data)
+    def get_queryset(self):
+        """queryset to include only available products"""
+        queryset = Product.objects.filter(available=True).order_by('-created')
+        return queryset
 
-#     def post(self, request):
-#         serializer = serializers.ProductSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        product = self.get_object(queryset=get_queryset())
 
-# class ProductSearch(APIView):
-#     def get(self, request):
+        reviews = Review.objects.filter(product=product)
 
-#         query = request.GET.get('query')
+        context['reviews'] = reviews
 
-#         if not query:
-#             return Response("Please provide a search query.", status=status.HTTP_400_BAD_REQUEST)
+        return context
 
-#         """Filter products based on the search query (case-insensitive search in the title field)"""
-#         products = Product.objects.filter(title__icontains=query)
-
-#         """Check if any products match the search query"""
-#         if not products:
-#             return Response("No products found for the search query.", status=status.HTTP_400_BAD_REQUEST)
-
-#         # Serialize the products that match the search query
-#         serializer = serializers.ProductSerializer(products, many=True)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-# class ReviewList(APIView):
-#     def get(self, request):
-#         reviews = Review.objects.all()
-#         serializer = serializers.ReviewSerializer(reviews, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = serializers.ReviewSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class CategoryList(APIView):
-#     def get(self, request):
-#         categories = Category.objects.all()
-#         serializer = serializers.CategorySerializer(categories, many=True)
-#         return Response(serializer.data)
-
-#     def post(self, request):
-#         serializer = serializers.CategorySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def get_object(self, queryset=None):
+        """Get the product object based on the slug field"""
+        slug = self.kwargs.get('slug')
+        obj = Product.objects.get(slug=slug)
+        return obj

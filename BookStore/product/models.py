@@ -19,7 +19,7 @@ class Category(BaseModel):
     
     image = models.ImageField(upload_to='media/catgories/',
                               height_field=None, width_field=None, max_length=None)
-    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
+    parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.PROTECT, related_name='children')
     class Meta:
 
         """
