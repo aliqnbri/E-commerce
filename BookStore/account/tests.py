@@ -9,12 +9,13 @@ class UsersManagersTests(TestCase):
     def test_create_superuser(self):
         User = get_user_model()
         user = User.objects.create_superuser(
-            email="admin@admin.com", password="foo")
+            email="admin@admin.com", password="foo" ,username='admin')
         self.assertEqual(user.email, "admin@admin.com")
         self.assertTrue(user.is_active)
         self.assertTrue(user.is_staff)
         self.assertTrue(user.is_superuser, False)
         self.assertTrue(user.role, 'ad')
+        self.assertTrue(user.username, 'admin')
         # try:
         #     # username is None for the AbstractUser option
         #     # username does not exist for the AbstractBaseUser option

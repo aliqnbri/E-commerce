@@ -17,7 +17,7 @@ class Category(BaseModel):
     slug = models.SlugField(max_length=200, unique=True)
     description = models.TextField(blank=True)
     
-    image = models.ImageField(upload_to='covers/catgories/',
+    image = models.ImageField(upload_to='media/catgories/',
                               height_field=None, width_field=None, max_length=None)
     parent = models.ForeignKey('self', null=True, blank=True, on_delete=models.CASCADE, related_name='children')
     class Meta:
@@ -70,7 +70,7 @@ class Product(BaseModel):
     slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
-    image = models.ImageField(upload_to='covers/products/', blank=True)
+    image = models.ImageField(upload_to='media/products/', blank=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)

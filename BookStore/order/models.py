@@ -13,8 +13,8 @@ class Order(BaseModel):
     Reprisent orders of customers
     """
     customer = models.ForeignKey(User, on_delete=models.CASCADE)
-    city = models.CharField(max_length=100)
-    paid = models.BooleanField(default=False)
+    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    is_completed = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['-created']
@@ -41,7 +41,7 @@ class OrderItem(BaseModel):
     quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
-        return str(self.id)
+        return f"Order Item #{self.id} - Product: {self.product}, Quantity: {self.quantity}"
 
     def get_cost(self):
         return self.price * self.quantity

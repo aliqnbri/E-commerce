@@ -43,7 +43,7 @@ class Address(BaseModel):
     """
     Address Model for user's address 
     """
-    user = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)

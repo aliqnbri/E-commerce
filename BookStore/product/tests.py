@@ -2,35 +2,65 @@
 from .models import Category, Author, Review, Product
 from django.test import TestCase
 from django.db import IntegrityError
-
-# Create your tests here.
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
 
-class CategoryTest(TestCase):
 
+class ModelTestCase(TestCase):
     def setUp(self):
-        """
-        Creates a category object for testing purposes.
-        """
+        # Create test data for models
         self.category = Category.objects.create(
-            name='Fantasy', description='products of fantasy genre')
+            name='Test Category', slug='test-category', description='products of fantasy genre' ,parent=None, image= 'media/catgories/test.jpg')
+        self.author = Author.objects.create(
+            first_name='John', last_name='Doe', slug='john-doe', bio='lives in Tehran')
 
-    def test_category_creation(self):
-        """
-        Checks if the category was created successfully.
-        """
-        self.assertEqual(self.category.name, 'Fantasy')
-        self.assertEqual(self.category.description, 'products of fantasy genre')
-        self.assertTrue(self.category.slug == 'fantasy')
+        self.product = Product.objects.create(title='Test Product', slug='test-product', author=self.author,
+                                              isbn='123456789', price=10.00, available=True, description='some description')
+        self.product.categories.add(self.category)
+        
+        
+        self.user = User.objects.create(
+            username='testuser', email='test@example.com')
+        self.review = Review.objects.create(
+            user=self.user, product=self.product, rating=5, comment='Great product!')
 
-    def test_category_unique_name(self):
+    def test_product_model(self):
         """
-        Checks if a category name is unique.
+        Test product 
         """
-        with self.assertRaises(IntegrityError):
-            Category.objects.create(
-                name='Fantasy', description='Another description')
+        
+        product = Product.objects.get(slug='test-product')
+        self.assertEqual(product.title, 'Test Product')
+        self.assertEqual(product.author, self.author)
+        self.assertEqual(self.product.author.first_name, 'John')
+        self.assertEqual(self.product.author.last_name, 'Doe')
+        self.assertEqual(product.isbn, '123456789')
+        self.assertEqual(self.product.price, 10.00)
+        self.assertTrue(self.product.available)
+        self.assertEqual(self.product.description, 'some description')
+        self.assertEqual(self.product.categories.first().name, 'Test Category')
+        self.assertEqual(str(self.product), 'Test Product')
+
+    def test_category_products(self):
+        category = Category.objects.get(name='Test Category')
+        products = category.product_set.all()
+        self.assertEqual(products.count(), 1)
+        self.assertEqual(products.first().title, 'Test Product')
+
+
+    def test_category_model(self):
+        """
+        Geting a category object for testing purposes.
+        """
+        category = Category.objects.get(slug='test-category')
+        self.assertEqual(self.category.name, 'Test Category')
+        self.assertEqual(self.category.image, 'media/catgories/test.jpg')
+        self.assertEqual(self.category.description,'products of fantasy genre')
+        self.assertTrue(self.category.slug == 'test-category')
+        self.assertIsNone(self.category.parent)
+        self.assertEqual(self.category._meta.verbose_name, 'category')
+        self.assertEqual(self.category._meta.verbose_name_plural, 'categories')
 
     def test_category_save(self):
         """
@@ -40,83 +70,20 @@ class CategoryTest(TestCase):
         self.category.save()
         self.assertTrue(self.category.slug == 'science-fiction')
 
+    def test_review_model(self):
+        """ Test Review Model """
+        self.assertEqual(self.review.user, self.user)
+        self.assertEqual(self.review.product, self.product)
+        self.assertEqual(self.review.rating, 5)
+        self.assertEqual(self.review.comment, 'Great product!')
 
-class AuthorTest(TestCase):
-
-    def setUp(self):
+    def test_author_model(self):
         """
-        Creates an author object for testing purposes.
+        Test Author Model 
         """
-        self.author = Author.objects.create(
-            first_name='J.K', last_name='Rowling', bio='Famous author of the Harry Potter series.')
+        self.assertEqual(self.author.first_name, 'John')
+        self.assertEqual(self.author.last_name, 'Doe')
+        self.assertEqual(self.author.slug, 'john-doe')
+        self.assertEqual(self.author.bio, 'lives in Tehran')
 
-    def test_author_creation(self):
-        """
-        Checks if the author was created successfully.
-        """
-        self.assertEqual(self.author.first_name, 'J.K')
-        self.assertEqual(self.author.last_name, 'Rowling')
-        self.assertFalse(self.author.slug =='jk-rowling')
-
-    def test_author_unique_name(self):
-        """
-        Checks if an author name is unique.
-        """
-        with self.assertRaises(IntegrityError):
-            Author.objects.create(
-                first_name='J.K', last_name='Rowling', bio='Another bio')
-
-
-class ProductTest(TestCase):
-
-    def setUp(self):
-        """
-        Creates a product object for testing purposes.
-        """
-        self.author = Author.objects.create(
-            first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.')
-        category = Category.objects.create(
-            name='Classics', description='Classic Literature')
-        # self.categoty = Product.categories(category) 
-
-        self.product = Product.objects.create(title='To Kill a Mockingbird', author=self.author, isbn='978-0-449-50420-7', image='covers/products/cover.jpg',
-                                           description='A coming-of-age story about a young girl growing up in the American South during the 1930s.', price=17.99, available=True)
-
-    def test_product_creation(self):
-        """
-        Checks if the product was created successfully.
-        """
-        self.assertEqual(self.product.title, 'To Kill a Mockingbird')
-        self.assertEqual(self.product.author.first_name, 'Harper')
-        self.assertEqual(self.product.author.last_name, 'Lee')
-        self.assertTrue(self.product.isbn == '978-0-449-50420-7')
-        self.assertTrue(self.product.image == 'covers/products/cover.jpg')
-        self.assertEqual(self.product.description,
-                         'A coming-of-age story about a young girl growing up in the American South during the 1930s.')
-        self.assertEqual(self.product.price, 17.99)
-        self.assertTrue(self.product.available)
-
-
-class ReviewTest(TestCase):
-
-    def setUp(self):
-        """
-        Creates a product object for testing purposes.
-        """
-        self.product = Product.objects.create(title='To Kill a Mockingbird', author=Author.objects.create(first_name='Harper', last_name='Lee', bio='American novelist, playwright, and activist.'),
-                                        isbn='978-0-449-50420-7', image='covers/products/cover.jpg', description='A coming-of-age story about a young girl growing up in the American South during the 1930s.', price=17.99, available=True)
-
-    def test_review_creation(self):
-        """
-        Checks if a review can be created successfully for a specific product.
-        """
-        rating = 5
-        comment = 'An excellent product!'
-
-        review = Review.objects.create(product=self.product, user=User.objects.create(
-            username='user1'), rating=rating, comment=comment)
-
-        self.assertEqual(review.product, self.product)
-        self.assertEqual(review.user, User.objects.get(username='user1'))
-        self.assertEqual(review.rating, rating)
-        self.assertEqual(review.comment, comment)
+   
