@@ -3,6 +3,7 @@ from core.models import BaseModel
 from django.utils.text import slugify
 from taggit.managers import TaggableManager
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 # <p class="tags">Tags: {{ catgory.tags.all|join:", " }}</p>
 # Create your models here.
@@ -30,6 +31,9 @@ class Category(BaseModel):
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
+    def get_absolute_url(self):
+        return reverse('product:product_list_by_category',
+                       args=[self.slug])
     def __str__(self):
         return self.name
 
@@ -79,6 +83,9 @@ class Product(BaseModel):
     tags = TaggableManager()
     class Meta:
         ordering = ('title',)
+
+    def get_absolute_url(self):
+        return reverse('product:product_detail', args=[self.id,self.slug])
 
     def __str__(self):
         return self.title

@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from .managers import CustomUserManager
 from core.models import BaseModel
 from django.db import models
-import re
 
 
 class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):

@@ -67,6 +67,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'order.context_processors.cart',
             ],
         },
     },
@@ -109,6 +110,10 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
+# STATIC_ROOT = BASE_DIR 
+STATICFILES_DIRS = [
+    BASE_DIR / 'static', 
+]
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

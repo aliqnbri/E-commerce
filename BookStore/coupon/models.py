@@ -8,6 +8,7 @@ class Coupon(models.Model):
     discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     expiration_date = models.DateField(editable=True, blank=True, null=True)
+    valid_from = models.DateTimeField()
     is_active = models.BooleanField(default=False)
 
 
