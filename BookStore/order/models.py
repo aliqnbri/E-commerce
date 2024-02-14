@@ -29,6 +29,11 @@ class Order(BaseModel):
         return sum(item.get_cost() for item in self.items.all())
 
 
+    def get_username(self):
+        if self.customer.username:
+            return self.customer.username
+        return self.user.email 
+
 class OrderItem(BaseModel):
     order = models.ForeignKey(Order,
                                  related_name='items',

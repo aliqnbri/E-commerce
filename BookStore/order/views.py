@@ -1,28 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.urls import reverse
-
-
-
 from django.conf import settings
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-
 from order.models import OrderItem, Order
-from order.forms import OrderCreateForm
-from .tasks import order_created
-from order.manager import Cart
-
-
-
-
-
+from order.forms import OrderCreateForm ,CartAddProductForm
+from order.tasks import order_created
+from order.cart import Cart
 from django.views.decorators.http import require_POST
 from product.models import Product
-from coupons.forms import CouponApplyForm
+from coupon.forms import CouponApplyForm
 from product.recommender import Recommender
-from order.cart import Cart
-from order.forms import CartAddProductForm
+
 
 
 
@@ -44,7 +34,7 @@ def order_create(request):
             # clear the cart
             cart.clear()
             # launch asynchronous task
-            order_created.delay(order.id)
+            order_created(order.id)
             # set the order in the session
             request.session['order_id'] = order.id
             # redirect for payment
@@ -78,13 +68,6 @@ def admin_order_pdf(request, order_id):
 
 
 
-
-
-
-
-
-
-
 @require_POST
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -114,13 +97,13 @@ def cart_detail(request):
                             'override': True})
     coupon_apply_form = CouponApplyForm()
 
-    r = Recommender()
-    cart_products = [item['product'] for item in cart]
-    if(cart_products):
-        recommended_products = r.suggest_products_for(cart_products,
-                                                      max_results=4)
-    else:
-        recommended_products = []
+    # r = Recommender()
+    # cart_products = [item['product'] for item in cart]
+    # if(cart_products):
+    #     recommended_products = r.suggest_products_for(cart_products,
+    #                                                   max_results=4)
+    # else:
+    recommended_products = []
 
     return render(request,
                   'cart/detail.html',
