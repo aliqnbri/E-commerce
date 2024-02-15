@@ -4,7 +4,7 @@ from account.models import CustomUser, CustomerProfile
 from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 from product.models import Category , Product , Review
-
+from coupon.models import Coupon
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -97,3 +97,19 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         fields = '__all__'        
+
+
+
+
+class CouponSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Coupon
+        fields = ['id', 'product', 'code', 'discount_percent', 'discount_amount', 'expiration_date', 'valid_from', 'is_active']
+
+    def calculate_discounted_price(self, obj):
+        if obj.discount_percent is not None:
+            return obj.product.price * (1 - (obj.discount_percent / 100))
+        elif obj.discount_amount is not None:
+            return obj.product.price - obj.discount_amount
+        else:
+            return obj.product.price        

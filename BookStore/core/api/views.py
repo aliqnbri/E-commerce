@@ -19,18 +19,6 @@ from datetime import timedelta
 from product import models
 from core.api import serializers
 
-
-
-from rest_framework.decorators import api_view
-
-
-
-
-
-
-
-
-
 from product.models import Product, Category, Review
 
 
@@ -80,24 +68,6 @@ class LoginView(APIView):
         else:
             return Response({"error": "This account is not active"}, status=status.HTTP_404_NOT_FOUND)
 
-
-
-
-
-
-
-
-
-
-
-class ProductListView(ListView):
-    model = models.Product
-    template_name = 'product/index.html'
-    context_object_name = 'products'
-    paginate_by = 2
-    queryset = Product.objects.all()
-    # def get_queryset(self):
-    #     return Product.objects.all()
 
 
 
@@ -163,7 +133,14 @@ class CategoryList(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class CouponListAPIView(APIView):
+    def get(self, request):
+        coupons = Coupon.objects.all()
+        serializer = serializers.CouponSerializer(coupons, many=True)
+        return Response(serializer.data)
 
+        
+    
 
 
 
