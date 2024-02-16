@@ -24,6 +24,7 @@ urlpatterns = [
     path('product_search/', views.ProductSearch.as_view(), name='product_search'),
     path('product_search/', views.ProductSearch.as_view(), name='product_search'),
     path('coupons/', views.CouponListAPIView.as_view(), name='coupon-list'),
+    path('category/', views.CategoryList.as_view(), name='category-list'),
     ]
 
 

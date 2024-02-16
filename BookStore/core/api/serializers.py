@@ -5,6 +5,8 @@ from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 from product.models import Category , Product , Review
 from coupon.models import Coupon
+
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):

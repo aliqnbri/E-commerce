@@ -18,7 +18,7 @@ from django.conf import settings
 from datetime import timedelta
 from product import models
 from core.api import serializers
-
+from coupon.models import Coupon
 from product.models import Product, Category, Review
 
 
@@ -75,6 +75,8 @@ class ProductList(APIView):
     def get(self, request):
         products = models.Product.objects.all()
         serializer = serializers.ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
         return Response(serializer.data)
 
     def post(self, request):
