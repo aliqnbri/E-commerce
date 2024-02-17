@@ -13,8 +13,7 @@ class BaseModel(models.Model):
     is_deleted = models.BooleanField(default=False)
     status = models.CharField(max_length=8,  choices=Status.choices, default=Status.ACTIVE)
     is_deleted = models.BooleanField()
-    objects = softDeleteManager()
-    all_objects = models.Manager()
+    objects = SoftDeleteManager()
 
 
     def delete(self):
