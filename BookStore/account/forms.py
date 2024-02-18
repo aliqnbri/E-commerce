@@ -51,19 +51,6 @@ class UserEditForm(forms.ModelForm):
         return data
 
 
-# class ProfileEditForm(forms.ModelForm):
-#     class Meta:
-#         model = CustomerProfile
-#         fields = ['photo']
-
-
-
-
-
-
-
-
-
 
 class UserAdminCreationForm(forms.ModelForm):
     """
