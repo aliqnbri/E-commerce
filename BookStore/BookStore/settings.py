@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #Internal Apps
     'account.apps.AccountConfig',
     'home.apps.HomeConfig',
     'order.apps.OrderConfig',
@@ -32,6 +33,7 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'payment.apps.PaymentConfig',
     'coupon.apps.CouponConfig',
+    #External Apps
     'debug_toolbar',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -123,6 +125,13 @@ CART_SESSION_ID = 'cart'
 AUTH_USER_MODEL = "account.CustomUser"
 
 
+# AUTHENTICATION_BACKENDS = [
+#     'django.contrib.auth.backends.ModelBackend',
+#     'account.authentications.CustomAuthentication',
+# ]
+
+
+
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -132,6 +141,10 @@ EMAIL_HOST_PASSWORD = 'pkqp dktx ommv tytn'
 
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        # 'rest_framework.permissions.AllowAny'
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
@@ -141,19 +154,19 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=99),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
-
+    # 'SIGNING_KEY': setting.SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
     'JWK_URL': None,
     'LEEWAY': 0,
 
-    'AUTH_HEADER_TYPES': ('Bearer',),
+    'AUTH_HEADER_TYPES': ('Bearer','JWT',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
@@ -187,10 +200,11 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Stripe settings
-STRIPE_PUBLISHABLE_KEY = '' # Publishable key
-STRIPE_SECRET_KEY = ''      # Secret key
-STRIPE_API_VERSION = '2022-08-01'
-STRIPE_WEBHOOK_SECRET = ''
+ZARINPAL_PUBLISHABLE_KEY = '' # Publishable key
+ZARINPAL_SECRET_KEY = ''      # Secret key
+ZARINPAL_API_VERSION = ''
+ZARINPAL_API_KEY = ''
+ZARINPAL_WEBHOOK_SECRET = ''
 
 
 # Redis settings

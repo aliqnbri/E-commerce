@@ -1,4 +1,4 @@
-{% extends "admin/base_site.html" %}
+{% extends 'admin/base_site.html' %}
 
 {% block title %}
   Order {{ order.id }} {{ block.super }}
@@ -6,10 +6,10 @@
 
 {% block breadcrumbs %}
   <div class="breadcrumbs">
-    <a href="{% url "admin:index" %}">Home</a> &rsaquo;
-    <a href="{% url "admin:orders_order_changelist" %}">Orders</a>
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    <a href="{% url 'admin:orders_order_changelist' %}">Orders</a>
     &rsaquo;
-    <a href="{% url "admin:orders_order_change" order.id %}">Order {{ order.id }}</a>
+    <a href="{% url 'admin:orders_order_change' order.id %}">Order {{ order.id }}</a>
     &rsaquo; Detail
   </div>
 {% endblock %}
@@ -31,16 +31,16 @@
     </tr>
     <tr>
       <th>Customer</th>
-      <td>{{ order.first_name }} {{ order.last_name }}</td>
+      <td>{{ order.customer.username }}</td>
     </tr>
     <tr>
       <th>E-mail</th>
-      <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
+      <td><a href="mailto:{{ order.customer.email }}">{{ order.customer.email }}</a></td>
     </tr>
     <tr>
       <th>Address</th>
     <td>
-      {{ order.address }},
+      {{ order.customer.address }},
       {{ order.postal_code }} {{ order.city }}
     </td>
     </tr>
@@ -53,11 +53,11 @@
       <td>{% if order.paid %}Paid{% else %}Pending payment{% endif %}</td>
     </tr>
     <tr>
-      <th>Stripe payment</th>
+      <th>zarinpal payment</th>
       <td>
-        {% if order.stripe_id %}
-          <a href="{{ order.get_stripe_url }}" target="_blank">
-            {{ order.stripe_id }}
+        {% if order.zarinpal_id %}
+          <a href="{{ order.get_zarinpal_url }}" target="_blank">
+            {{ order.zarinpal_id }}
           </a>
         {% endif %}
       </td>

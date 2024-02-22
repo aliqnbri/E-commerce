@@ -22,8 +22,8 @@ class CustomUserManager(BaseUserManager):
 
         if phone_number:
             if not re.match(r'^\+98\d{10}$', self.phone_number):
-                raise ValidationError(
-                    "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")    
+                raise ValidationError(_("Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
+                    )    
 
         email = self.normalize_email(email)
         user = self.model(email=email,username=username,phone_number=phone_number, **extra_fields)
@@ -58,7 +58,9 @@ class CustomUserManager(BaseUserManager):
         return user_instance
 
     def delete_user(self, user_instance):
+        user_instance.is_deleted = True
         user_instance.delete()
+        user_instance.save()
             
 
 

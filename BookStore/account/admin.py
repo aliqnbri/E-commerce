@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from .forms import UserAdminCreationForm, UserAdminChangeForm
 from django.contrib.auth.admin import UserAdmin
-from .forms import UserAdminCreationForm, UserAdminChangeForm
-
+from account.forms import UserAdminCreationForm, UserAdminChangeForm
+from core.managers import export_to_csv
 
 User = get_user_model()
 
@@ -32,6 +31,7 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ['username','email']
     ordering = ['-created']
     filter_horizontal = ()
+    actions = [export_to_csv]
 
 
 admin.site.register(User, CustomUserAdmin)

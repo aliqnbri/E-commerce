@@ -12,9 +12,8 @@ class BaseModel(models.Model):
     updated = models.DateTimeField(auto_now=True)
     is_deleted = models.BooleanField(default=False)
     status = models.CharField(max_length=8,  choices=Status.choices, default=Status.ACTIVE)
-    is_deleted = models.BooleanField()
-    objects = softDeleteManager()
-    all_objects = models.Manager()
+    is_deleted = models.BooleanField(default=False)
+    objects = SoftDeleteManager()
 
 
     def delete(self):
