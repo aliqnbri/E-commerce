@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Author, Product
-
+from core.managers import export_to_csv
 # Register your models here.
 
 
@@ -18,6 +18,7 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name',]  # Added field to search by description
     fields = ['name', 'slug', 'description']  # Reordered fields
     prepopulated_fields = {'slug': ('name',)}
+    actions = [export_to_csv]
 
     def products_count(self, obj):
         return obj.products.count()
@@ -37,6 +38,7 @@ class AuthorAdmin(admin.ModelAdmin):
     list_filter = ['first_name', 'last_name']
     prepopulated_fields = {'slug': ('first_name', 'last_name')}
     search_fields = ['first_name', 'last_name',]
+    actions = [export_to_csv]
 
 
 @admin.register(Product)
@@ -58,7 +60,8 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('title',)}
     readonly_fields = ['created', 'updated']
     # Added custom actions
-    actions = ['mark_as_unavailable', 'restore_availability']
+    actions = ['mark_as_unavailable', 'restore_availability',export_to_csv]
+
 
     def mark_as_unavailable(self, request, queryset):
         for obj in queryset.filter(available=True):

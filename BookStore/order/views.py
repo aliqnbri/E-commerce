@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from product.models import Product
 from coupon.forms import CouponApplyForm
 from product.recommender import Recommender
-
+from order.tasks import order_created
 
 
 
@@ -34,7 +34,8 @@ def order_create(request):
             # clear the cart
             cart.clear()
             # launch asynchronous task
-            order_created(order.id)
+            order_created.delay(order.id)
+           
             # set the order in the session
             request.session['order_id'] = order.id
             # redirect for payment
