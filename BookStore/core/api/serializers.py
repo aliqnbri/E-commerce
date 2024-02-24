@@ -7,77 +7,10 @@ from product.models import Category , Product , Review
 from coupon.models import Coupon
 
 
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
-        token['email'] = user.email
-
-        return token
- 
-
-class RegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = CustomUser
-        fields = ('username', 'email', 'password', )
-        extra_kwargs = {'password':{'write_only':True}}
-
-    # def validate(self, data):
-    #     if data['password'] != data['password2']:
-    #         raise serializers.ValidationError(
-    #             {"password": "Password fields didn't match."})
-    #     return data
-
-    def create(self, validated_data):
-        password = validated_data.pop('password', None)
-        instance = self.Meta.model(**validated_data)
-        if password is not None:
-            instance.set_password(password)
-        # user = CustomUser.objects.create(
-        #     username=validated_data['username'],
-        #     email=validated_data['email'],
-        
-        # )
-        # user.set_password(validated_data['password'])
-        # user.save()
-        instance.save()
-        return instance
-
-
-
-
-class VerifyAccountSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField()
-
-
-
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = '__all__'
-
-
-
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'        
-
-
-class ReviewSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Review
-        fields = '__all__'        
-
-
 class CouponSerializer(serializers.ModelSerializer):
     class Meta:
         model = Coupon
-        fields = ['id', 'product', 'code', 'discount_percent', 'discount_amount', 'expiration_date', 'valid_from', 'is_active']
+        fields = ['id', 'product', 'code', 'discount', 'discount_amount', 'expiration_date', 'valid_from', 'is_active']
 
     def calculate_discounted_price(self, obj):
         if obj.discount_percent is not None:

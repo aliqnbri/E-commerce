@@ -1,7 +1,101 @@
-
+from rest_framework import generics
 from django.shortcuts import render, get_object_or_404
 from order.forms import CartAddProductForm
-from .models import Category, Product
+from product.models import Category, Product ,Review
+from product import serializers
+# from product.recommender import Recommender
+
+
+
+class ProductDetailAPIView(generics.RetrieveAPIView):
+    queryset = Product.objects.all()
+    serializer_class = serializers.ProductSerializer
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class ProductSearch(APIView):
+    permission_classes = [AllowAny,]
+    def get(self, request):    
+        products = Product.objects.all()
+        query = request.GET.get('query')
+
+        if not query:
+            return Response("Please provide a search query.", status=status.HTTP_400_BAD_REQUEST)
+
+        """Filter products based on the search query (case-insensitive search in the title field)"""
+        products = models.Product.objects.filter(title__icontains=query)
+
+        """Check if any products match the search query"""
+        if not products:
+            return Response("No products found for the search query.", status=status.HTTP_400_BAD_REQUEST)
+
+        # Serialize the products that match the search query
+        serializer = serializers.ProductSerializer(products, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class ReviewList(APIView):
+    permission_classes = [AllowAny,]
+    def get(self, request):
+        reviews = models.Review.objects.all()
+        serializer = serializers.ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.ReviewSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CategoryList(APIView):
+    permission_classes = [AllowAny,]
+    def get(self, request):
+        categories = models.Category.objects.all()
+        serializer = serializers.CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = serializers.CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 def product_list(request, category_slug=None):
@@ -10,7 +104,7 @@ def product_list(request, category_slug=None):
     products = Product.objects.filter(available=True)
     if category_slug:
         category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(category=category)
+        products = products.filter(categories=category)
     return render(request,
                   'shop/product/list.html',
                   {'category': category,
@@ -24,10 +118,13 @@ def product_detail(request, id, slug):
                                 slug=slug,
                                 available=True)
     cart_product_form = CartAddProductForm()
+    # r = Recommender()
+    # recommended_products = r.suggest_products_for([product], 4)
     return render(request,
                   'shop/product/detail.html',
                   {'product': product,
-                   'cart_product_form': cart_product_form})
+                   'cart_product_form': cart_product_form,})
+                #    'recommended_products': recommended_products})
 
 
 

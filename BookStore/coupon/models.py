@@ -5,7 +5,7 @@ from product.models import Product
 class Coupon(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     code = models.CharField(max_length=10)
-    discount_percent = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
+    discount = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True)
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     expiration_date = models.DateField(editable=True, blank=True, null=True)
     valid_from = models.DateTimeField()

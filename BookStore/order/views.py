@@ -11,9 +11,9 @@ from order.cart import Cart
 from django.views.decorators.http import require_POST
 from product.models import Product
 from coupon.forms import CouponApplyForm
-from product.recommender import Recommender
-from order.tasks import order_created
 
+from order.tasks import order_created
+# from product.recommender import Recommender
 
 
 def order_create(request):
@@ -104,10 +104,14 @@ def cart_detail(request):
     #     recommended_products = r.suggest_products_for(cart_products,
     #                                                   max_results=4)
     # else:
-    recommended_products = []
+    #     recommended_products = []
 
     return render(request,
                   'cart/detail.html',
                   {'cart': cart,
-                   'coupon_apply_form': coupon_apply_form,
-                   'recommended_products': recommended_products})
+                   'coupon_apply_form': coupon_apply_form,})
+                #    'recommended_products': recommended_products})
+
+def get_total_cost(self):
+        total_cost = self.get_total_cost_before_discount()
+        return total_cost - self.get_discount()

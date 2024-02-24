@@ -58,13 +58,13 @@ class UserAdminCreationForm(forms.ModelForm):
     fields, plus a repeated password.
     """
     username = forms.CharField(max_length=25)
-    phone_number = forms.CharField(max_length=13,required=False)
+    # phone_number = forms.CharField(max_length=13,required=False)
     password = forms.CharField(widget=forms.PasswordInput)
     password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ['email','username', 'phone_number']
+        fields = ['email','username', 'password',]
 
     def clean(self):
         '''
@@ -75,10 +75,10 @@ class UserAdminCreationForm(forms.ModelForm):
         password_2 = cleaned_data.get("password_2")
         if password is not None and password != password_2:
             self.add_error("password_2", "Your passwords must match")
-        phone_number = self.cleaned_data.get('phone_number')    
-        if not re.match(r'^\+98\d{10}$', self.phone_number):
-                raise ValidationError(
-                    "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")    
+        # phone_number = self.cleaned_data.get('phone_number')    
+        # if not re.match(r'^\+98\d{10}$', phone_number):
+        #         raise ValidationError(
+        #             "Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")    
         return cleaned_data
 
     def save(self, commit=True):
