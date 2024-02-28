@@ -7,9 +7,54 @@ from product import serializers
 
 
 
-class ProductDetailAPIView(generics.RetrieveAPIView):
-    queryset = Product.objects.all()
+class ProductDetailApiView(generics.RetrieveAPIView):
+    """DRF API Product Detail View """
     serializer_class = serializers.ProductSerializer
+
+    def get_queryset(self,id,slug):
+        queryset = Product.objects.filter(id=id, slug=slug, available=True)
+        return get_object_or_404(queryset)
+
+    def get(self, request, id=None, slug=None):
+        product = self.get_queryset(id, slug)
+        serializer = self.serializer_class(product, many=True)
+        cart_product_form = CartAddProductForm()
+        # r = Recommender()
+        # recommended_products = r.suggest_products_for([product], 4)
+        data = {
+            'product': serializer.data,
+            'cart_product_form': cart_product_form,
+            # 'recommended_products': recommended_products,
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
+
+# def product_detail(request, id, slug):
+#     product = get_object_or_404(Product,
+#                                 id=id,
+#                                 slug=slug,
+#                                 available=True)
+#     cart_product_form = CartAddProductForm()
+#     # r = Recommender()
+#     # recommended_products = r.suggest_products_for([product], 4)
+#     return render(request,
+#                   'shop/product/detail.html',
+#                   {'product': product,
+#                    'cart_product_form': cart_product_form,})
+#                 #    'recommended_products': recommended_products})
+
+
+
+
+class ProductListApiView():
+    pass
+
+
+class ProductUpdateApiView():
+    pass
+
+class ProductDeleteApiView():
+    pass
 
 
 
@@ -110,21 +155,6 @@ def product_list(request, category_slug=None):
                   {'category': category,
                    'categories': categories,
                    'products': products})
-
-
-def product_detail(request, id, slug):
-    product = get_object_or_404(Product,
-                                id=id,
-                                slug=slug,
-                                available=True)
-    cart_product_form = CartAddProductForm()
-    # r = Recommender()
-    # recommended_products = r.suggest_products_for([product], 4)
-    return render(request,
-                  'shop/product/detail.html',
-                  {'product': product,
-                   'cart_product_form': cart_product_form,})
-                #    'recommended_products': recommended_products})
 
 
 
