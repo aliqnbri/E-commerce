@@ -12,7 +12,7 @@ from account.forms import LoginForm, UserRegistrationForm, \
 
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
-from core.api.serializers import MyTokenObtainPairSerializer
+from account.serializers import MyTokenObtainPairSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.authtoken.models import Token
@@ -27,6 +27,15 @@ from django.middleware import csrf
 from django.utils import timezone
 from rest_framework import status
 from django.conf import settings
+from rest_framework.views import APIView
+
+
+from rest_framework.permissions import AllowAny,IsAuthenticated
+
+
+
+
+
 
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (AllowAny,)

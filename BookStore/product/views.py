@@ -3,30 +3,97 @@ from django.shortcuts import render, get_object_or_404
 from order.forms import CartAddProductForm
 from product.models import Category, Product ,Review
 from product import serializers
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny,IsAuthenticated
+from django.views.generic import ListView
 # from product.recommender import Recommender
 
-
-
-class ProductDetailApiView(generics.RetrieveAPIView):
+class ProductDetailAPIView(generics.RetrieveAPIView):
     """DRF API Product Detail View """
     serializer_class = serializers.ProductSerializer
+    cart_product_form = CartAddProductForm()
 
-    def get_queryset(self,id,slug):
-        queryset = Product.objects.filter(id=id, slug=slug, available=True)
+    def get_queryset(self,slug=None):
+        queryset = Product.objects.filter(slug=slug,available=True).order_by('-created')
         return get_object_or_404(queryset)
 
-    def get(self, request, id=None, slug=None):
-        product = self.get_queryset(id, slug)
-        serializer = self.serializer_class(product, many=True)
-        cart_product_form = CartAddProductForm()
+    def get(self, request,slug):
+        product = self.get_queryset(slug=slug)
+        serializer = self.serializer_class(product).data
+    
+        
         # r = Recommender()
         # recommended_products = r.suggest_products_for([product], 4)
-        data = {
-            'product': serializer.data,
-            'cart_product_form': cart_product_form,
-            # 'recommended_products': recommended_products,
-        }
-        return Response(data, status=status.HTTP_200_OK)
+        # data = {
+        #     'product': serializer.data,
+        #     'cart_product_form': cart_product_form,
+        #     # 'recommended_products': recommended_products,
+        # }
+        return Response(serializer, status=status.HTTP_200_OK)
+
+
+class ProductListView(ListView):
+    """
+    list of products by category
+    """
+    model = Product
+    # template_name = 'product/product_list.html'
+    context_object_name = 'products'
+    paginate_by = 3
+
+    def get_queryset(self):
+        """Queryset to include only available products ordered by created"""
+        category_slug = self.kwargs.get('category_slug')
+        queryset = Product.objects.filter(available=True).order_by('-created')
+        if category_slug:
+            category = get_object_or_404(Category, slug=category_slug)
+            products = products.objects.filter(category=category)
+        return queryset
+
+    def get_object(self, queryset=None):
+        id = self.kwargs.get('id')
+        slug = self.kwargs.get('slug')
+        return get_object_or_404(Product, id=id, slug=slug)
+
+
+    def get_context_data (self, **kwargs):
+
+        context = super().get_context_data(**kwargs)
+        product = self.get_object()
+        product_url = reverse('product_detail', args=[product.id, product.slug])
+        context['product_url'] = product_url
+        return context
+        context = super().get_context_data(**kwargs)
+        context['category'] = get_object_or_404(Category, slug=self.kwargs.get(
+            'category_slug')) if self.kwargs.get('category_slug') else None
+        context['categories'] = Category.objects.all()
+        return context
+
+
+
+
+
+# def product_list(request, category_slug=None):
+#     category = None
+#     categories = Category.objects.all()
+#     products = Product.objects.filter(available=True)
+#     if category_slug:
+#         category = get_object_or_404(Category, slug=category_slug)
+#         products = products.filter(categories=category)
+#     return render(request,
+#                   'shop/product/list.html',
+#                   {'category': category,
+#                    'categories': categories,
+#                    'products': products})
+
+
+
+
+
+
+
 
 
 # def product_detail(request, id, slug):
@@ -46,7 +113,7 @@ class ProductDetailApiView(generics.RetrieveAPIView):
 
 
 
-class ProductListApiView():
+class ProductListAPIView():
     pass
 
 
@@ -143,20 +210,6 @@ class CategoryList(APIView):
 
 
 
-def product_list(request, category_slug=None):
-    category = None
-    categories = Category.objects.all()
-    products = Product.objects.filter(available=True)
-    if category_slug:
-        category = get_object_or_404(Category, slug=category_slug)
-        products = products.filter(categories=category)
-    return render(request,
-                  'shop/product/list.html',
-                  {'category': category,
-                   'categories': categories,
-                   'products': products})
-
-
 
 
 
@@ -190,43 +243,6 @@ def product_list(request, category_slug=None):
 # from django.core.paginator import Paginator
 
 
-
-# class ProductListView(ListView):
-#     """
-#     list of products by category
-#     """
-#     model = Product
-#     template_name = 'product/product_list.html'
-#     context_object_name = 'products'
-#     paginate_by = 3
-
-
-#     def get_object(self, queryset=None):
-#         id = self.kwargs.get('id')
-#         slug = self.kwargs.get('slug')
-#         return get_object_or_404(Product, id=id, slug=slug)
-
-#     def get_queryset(self):
-#         """Queryset to include only available products ordered by created"""
-#         category_slug = self.kwargs.get('category_slug')
-#         queryset = Product.objects.filter(available=True).order_by('-created')
-#         if category_slug:
-#             category = get_object_or_404(Category, slug=category_slug)
-#             products = products.objects.filter(category=category)
-#         return queryset
-
-#     # def get_context_data (self, **kwargs):
-
-#     #     context = super().get_context_data(**kwargs)
-#     #     product = self.get_object()
-#     #     product_url = reverse('product_detail', args=[product.id, product.slug])
-#     #     context['product_url'] = product_url
-#     #     return context
-#         # context = super().get_context_data(**kwargs)
-#         # context['category'] = get_object_or_404(Category, slug=self.kwargs.get(
-#         #     'category_slug')) if self.kwargs.get('category_slug') else None
-#         # context['categories'] = Category.objects.all()
-#         # return context
 
 
 # class ProductDetailView(DetailView):
