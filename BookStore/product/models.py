@@ -74,7 +74,7 @@ class Product(BaseModel):
     slug = models.SlugField(max_length=255, unique=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     isbn = models.CharField(max_length=13, unique=True)
-    image = models.ImageField(upload_to='media/products/', blank=True)
+    image = models.ImageField(upload_to='media/products/', blank=True, null=True)
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
