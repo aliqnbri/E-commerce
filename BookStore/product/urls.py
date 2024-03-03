@@ -14,13 +14,13 @@ app_name = 'product'
 urlpatterns = [
 #                         <== Product API ==>
 
-    path('', views.ProductListCreateAPIView.as_view(), name='product_list'),
+    path('', views.ProductListCreateAPIView.as_view(), name='product'),
     # path('', views.ProductMixinVeiw.as_view(), name='product_list'),
     path('create/', views.ProductCreateAPIView.as_view(), name='product_list'),
     # path('<slug:slug>/', views.ProductDetailAPIView.as_view(), name='product_list'),
-    path('<slug:slug>/', views.ProductMixinVeiw.as_view(), name='product_list'),
-    path('update/<slug:slug>/', views.ProductUpdateAPIView.as_view(), name='product_list'),
-    path('delete/<slug:slug>/', views.ProductDeleteAPIView.as_view(), name='product_list'),
+    path('<slug:slug>/', views.ProductMixinVeiw.as_view(), name='product_detail'),
+    path('update/<slug:slug>/', views.ProductUpdateAPIView.as_view()),
+    path('delete/<slug:slug>/', views.ProductDeleteAPIView.as_view()),
 
 
 

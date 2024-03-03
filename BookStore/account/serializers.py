@@ -17,14 +17,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email', 'password','password2' )
+        fields = ('username', 'email', 'password', )
         extra_kwargs = {'password':{'write_only':True}}
-
-    def validate(self, data):
-        if data['password'] != data['password2']:
-            raise serializers.ValidationError(
-                {"password": "Password fields didn't match."})
-        return data
 
     def create(self, validated_data):
         password = validated_data.pop('password', None)

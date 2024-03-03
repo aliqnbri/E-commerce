@@ -1,16 +1,11 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import authenticate, login
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from account.models import CustomUser
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
-from account.forms import LoginForm, UserRegistrationForm, \
-                   UserEditForm
-
-from rest_framework.permissions import AllowAny,IsAuthenticated
+from account.forms import LoginForm, UserRegistrationForm,UserEditForm
+from datetime import timedelta
 from rest_framework_simplejwt.views import TokenObtainPairView
 from account.serializers import MyTokenObtainPairSerializer
 from rest_framework.exceptions import AuthenticationFailed
@@ -28,51 +23,37 @@ from django.utils import timezone
 from rest_framework import status
 from django.conf import settings
 from rest_framework.views import APIView
-
-
-from rest_framework.permissions import AllowAny,IsAuthenticated
-
-
-
-
-
+from rest_framework import permissions
+from account import authentications ,serializers
 
 class MyObtainTokenPairView(TokenObtainPairView):
-    permission_classes = (AllowAny,)
+    permission_classes = (permissions.AllowAny,)
     serializer_class = MyTokenObtainPairSerializer
 
 
 #it was (CreateAPIView)
-class RegisterView(APIView):
-    permission_classes = [AllowAny]
-    # queryset = CustomUser.objects.all()
-    # permission_classes = (IsAuthenticated,)
-    # serializer_class = serializers.RegisterSerializer
-
-    def post(self, request):
-        serializer = serializers.RegisterSerializer(data=request.data)
+class RegisterCreateAPIView(CreateAPIView):
+    # authentication_classes = [authentications.CustomAuthentication]
+    permission_classes = [permissions.AllowAny]
+    serializer_class = serializers.RegisterSerializer
+    queryset = CustomUser.objects.all()
+    def perform_create(self,serializer):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            if user :
-                # return Response(status=status.HTTP_201_CREATED)
-          
-                # token = Token.objects.get_or_create(user=user)
-                # Assuming 'user' is the user object for which you want to create a token
-                token, created = Token.objects.get_or_create(user=user)
-
-                # token = Token.objects.create(user=user)
+            if user:
+                token = Token.objects.get_or_create(user=user)
                 token_lifetime = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
                 iran_delta = timedelta(hours=3, minutes=30)
-                response = Response({"message": "Register successful", "data": {'token': token.key}})
+                response = Response({"message": "Register successful", "data": {'token': token[0]}},status=status.HTTP_201_CREATED)
                 response.set_cookie(
                     key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-                    value=token.key,
+                    value=token[0],
                     max_age=iran_delta + token_lifetime,
                     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
                     samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
                 )
-                return response
+            return response
 
 
 
@@ -97,7 +78,9 @@ class RegisterAPI(APIView):
 
 
 class LoginView(APIView):
-     def post(self, request):
+    parser_classes = [permissions.IsAuthenticated]
+    authentication_classes = [authentications.CustomAuthentication]
+    def post(self, request):
         data = request.data
         email = request.data.get('email')
         username = request.data.get('username')
@@ -131,126 +114,77 @@ class LoginView(APIView):
 
 
 
-class ProductList(APIView):
-    permission_classes = [AllowAny,]
-    def get(self, request):
-        products = Product.objects.all()
-        serializer = serializers.ProductSerializer(products,many=True)
-        return Response(serializer.data)
 
-    def post(self, request):
-        serializer = serializers.ProductSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-
-
-
-
+# def user_login(request):
+#     if request.method == 'POST':
+#         form = LoginForm(request.POST)
+#         if form.is_valid():
+#             cd = form.cleaned_data
+#             user = authenticate(request,
+#                                 username=cd['username'],
+#                                 password=cd['password'])
+#             if user is not None:
+#                 if user.is_active:
+#                     login(request, user)
+#                     return HttpResponse('Authenticated successfully')
+#                 else:
+#                     return HttpResponse('Disabled account')
+#             else:
+#                 return HttpResponse('Invalid login')
+#     else:
+#         form = LoginForm()
+#     return render(request, 'account/login.html', {'form': form})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-def user_login(request):
-    if request.method == 'POST':
-        form = LoginForm(request.POST)
-        if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(request,
-                                username=cd['username'],
-                                password=cd['password'])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse('Authenticated successfully')
-                else:
-                    return HttpResponse('Disabled account')
-            else:
-                return HttpResponse('Invalid login')
-    else:
-        form = LoginForm()
-    return render(request, 'account/login.html', {'form': form})
-
-
-@login_required
-def dashboard(request):
-    # Display all actions by default
+# @login_required
+# def dashboard(request):
+#     # Display all actions by default
     
-    return render(request,
-                  'account/dashboard.html',
-                  {'section': 'dashboard'})
+#     return render(request,
+#                   'account/dashboard.html',
+#                   {'section': 'dashboard'})
 
 
-def register(request):
-    if request.method == 'POST':
-        user_form = UserRegistrationForm(request.POST)
-        if user_form.is_valid():
-            username =user_form.cleaned_data['username']
-            email = user_form.cleaned_data['email']
-            password = user_form.cleaned_data['password']
-            new_user = CustomUser.objects.create_user(username=username, email=email, password=password)
+# def register(request):
+#     if request.method == 'POST':
+#         user_form = UserRegistrationForm(request.POST)
+#         if user_form.is_valid():
+#             username =user_form.cleaned_data['username']
+#             email = user_form.cleaned_data['email']
+#             password = user_form.cleaned_data['password']
+#             new_user = CustomUser.objects.create_user(username=username, email=email, password=password)
 
-            return render(request,
-                          'account/register_done.html',
-                          {'new_user': new_user})
-    else:
-        user_form = UserRegistrationForm()
-    return render(request,
-                  'account/register.html',
-                  {'user_form': user_form})
+#             return render(request,
+#                           'account/register_done.html',
+#                           {'new_user': new_user})
+#     else:
+#         user_form = UserRegistrationForm()
+#     return render(request,
+#                   'account/register.html',
+#                   {'user_form': user_form})
 
 
-@login_required
-def edit(request):
-    if request.method == 'POST':
-        user_form = UserEditForm(instance=request.user,
-                                 data=request.POST)
-        profile_form = ProfileEditForm(
-                                    instance=request.user.profile,
-                                    data=request.POST,
-                                    files=request.FILES)
-        if user_form.is_valid() and profile_form.is_valid():
-            user_form.save()
-            profile_form.save()
-            messages.success(request, 'Profile updated '\
-                                      'successfully')
-        else:
-            messages.error(request, 'Error updating your profile')
-    else:
-        user_form = UserEditForm(instance=request.user)
-        profile_form = ProfileEditForm(
-                                    instance=request.user.profile)
-    return render(request,
-                  'account/edit.html',
-                  {'user_form': user_form,
-                   'profile_form': profile_form})
+# @login_required
+# def edit(request):
+#     if request.method == 'POST':
+#         user_form = UserEditForm(instance=request.user,
+#                                  data=request.POST)
+#         profile_form = ProfileEditForm(
+#                                     instance=request.user.profile,
+#                                     data=request.POST,
+#                                     files=request.FILES)
+#         if user_form.is_valid() and profile_form.is_valid():
+#             user_form.save()
+#             profile_form.save()
+#             messages.success(request, 'Profile updated '\
+#                                       'successfully')
+#         else:
+#             messages.error(request, 'Error updating your profile')
+#     else:
+#         user_form = UserEditForm(instance=request.user)
+#         profile_form = ProfileEditForm(
+#                                     instance=request.user.profile)
+#     return render(request,
+#                   'account/edit.html',
+#                   {'user_form': user_form,
+#                    'profile_form': profile_form})

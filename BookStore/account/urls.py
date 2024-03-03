@@ -2,9 +2,17 @@
 from account import views
 from django.urls import path, include
 from django.contrib.auth import views as auth_views
-
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+    TokenVerifyView,
+)
 
 urlpatterns = [
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('register/', views.RegisterCreateAPIView.as_view(), name='register'),
     # previous login view
     # path('login/', views.user_login, name='login'),
 
@@ -33,10 +41,8 @@ urlpatterns = [
     #      auth_views.PasswordResetCompleteView.as_view(),
     #      name='password_reset_complete'),
 
-    path('', include('django.contrib.auth.urls')),
-    path('', views.dashboard, name='dashboard'),
-    path('register/', views.register, name='register'),
-    path('edit/', views.edit, name='edit'),
+    # path('', include('django.contrib.auth.urls')),
+    # path('', views.dashboard, name='dashboard'),
 ]
 
 
