@@ -1,8 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from django import forms
-from django.core.exceptions import ValidationError
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from django import forms
 import re
 User = get_user_model()
 
@@ -49,7 +49,6 @@ class UserEditForm(forms.ModelForm):
         if qs.exists():
             raise forms.ValidationError('Email already in use.')
         return data
-
 
 
 class UserAdminCreationForm(forms.ModelForm):

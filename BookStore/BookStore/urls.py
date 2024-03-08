@@ -11,7 +11,8 @@ urlpatterns = [
     path('api_auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('account/', include('account.urls')),
     path('api/product/', include('product.urls',namespace='product')),
-    path('', include('product.urls',namespace='produ')),
+    path('api/v2/', include('product.routers'),)
+    # path('', include('product.urls',namespace='produ')),
     # path('order/', include('order.urls', namespace='orders')),
     # path('cart/', include('order.urls', namespace='cart')),
     # path('coupon/', include('coupon.urls', namespace='coupons')),

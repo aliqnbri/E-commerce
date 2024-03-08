@@ -5,12 +5,11 @@ from django.conf import settings
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-def get_tokens_for_user(user):
+def get_tokens_for_user(user: CustomUser) -> dict:
     refresh = RefreshToken.for_user(user)
     return {
         'refresh': str(refresh),
-        'access': str(refresh.access_token),
-    }
+        'access': str(refresh.access_token),}
 
 
 
@@ -22,7 +21,7 @@ def enforce_csrf(request):
         raise exceptions.PermissionDenied('CSRF Failed: %s' % reason)
 
 class CustomAuthentication(JWTAuthentication):
-    def authenticate(self, request):
+    def authenticate(self, request)-> tuple:
         header = self.get_header(request)
         print(request.COOKIES)
         if header is None:

@@ -21,10 +21,10 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     otp = models.CharField(max_length=6, null=True, blank=True,editable=True,)
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default='cu')
 
-    USERNAME_FIELD = "email"
+    # USERNAME_FIELD = "email"
 
     # email and passwrod required by default
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
 
@@ -34,6 +34,7 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
 
 class CustomerProfile(BaseModel):
     user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
+    #todo -> first_name last_name 
     
 
 
@@ -42,7 +43,7 @@ class Address(BaseModel):
     """
     Address Model for user's address 
     """
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)
