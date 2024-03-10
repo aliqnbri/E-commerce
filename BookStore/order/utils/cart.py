@@ -3,7 +3,6 @@ from django.conf import settings
 from product.models import Product
 from coupon.models import Coupon
 
-
 class Cart:
     def __init__(self, request):
         """

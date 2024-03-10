@@ -4,7 +4,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin
 from account.forms import UserAdminCreationForm, UserAdminChangeForm
 from core.managers import export_to_csv
-from typing import List, Tuple
+from typing import List, Tuple ,Type ,Callable
 
 User = get_user_model()
 
@@ -24,7 +24,7 @@ class CustomUserAdmin(UserAdmin):
         ('Permissions', {'fields': ('is_active', 'role')}),
     )
 
-    add_fieldsets: Tuple[Tuple[str, dict]] = (
+    add_fieldsets = (
         (None, {
             'classes': ('wide',),
             'fields': ('email', 'password', 'password_2')}
@@ -33,9 +33,9 @@ class CustomUserAdmin(UserAdmin):
     search_fields: List[str] = ['username', 'email']
     ordering: str = '-created'
     filter_horizontal: Tuple = ()
-    actions: List[Callable] = [export_to_csv]
+    actions = [export_to_csv]
 
-admin.site.register(User, CustomUserAdmin)
+# admin.site.register(User,CustomUserAdmin)
 
 
 

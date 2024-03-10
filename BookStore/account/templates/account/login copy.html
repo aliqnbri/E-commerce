@@ -1,43 +1,8 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="{% static 'css/base.css' %}" rel="stylesheet">
-  <link rel="shortcut icon" href="img/fav.png" />
-    <!-- Author Meta -->
-    <meta name="aliqnbi" content="codepixer" />
-    <!-- Meta Description -->
-    <meta name="description" content="" />
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="" />
-    <!-- meta character set -->
-    <meta charset="UTF-8" />
-    <!-- Site Title -->
+{% extends "base.html" %}
 
-    <link
-      href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
-      rel="stylesheet"
-    />
-    <!--
-			CSS
-			============================================= -->
-		
-    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
-</html>
+{% block title %}Log-in{% endblock %}
+
+{% block content %}
   <h1>Log-in</h1>
   <p>Please, use the following form to log-in:</p>
   <div class="col-lg-8 col-md-8">
@@ -60,13 +25,40 @@
         <input type="text" name="address" placeholder="Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Address'" required class="single-input">
       </div>
       <div class="input-group-icon mt-10">
+        <div class="icon"><i class="fa fa-plane" aria-hidden="true"></i></div>
         <div class="form-select" id="default-select"">
+          <select>
+            <option value="1">City</option>
+            <option value="1">Dhaka</option>
+            <option value="1">Dilli</option>
+            <option value="1">Newyork</option>
+            <option value="1">Islamabad</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group-icon mt-10">
+        <div class="icon"><i class="fa fa-globe" aria-hidden="true"></i></div>
+        <div class="form-select" id="default-select"">
+          <select>
+            <option value="1">Country</option>
+            <option value="1">Bangladesh</option>
+            <option value="1">India</option>
+            <option value="1">England</option>
+            <option value="1">Srilanka</option>
+          </select>
         </div>
       </div>
       
       <div class="mt-10">
         <textarea class="single-textarea" placeholder="Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required></textarea>
       </div>
+      <!-- For Gradient Border Use -->
+      <!-- <div class="mt-10">
+        <div class="primary-input">
+          <input id="primary-input" type="text" name="first_name" placeholder="Primary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Primary color'">
+          <label for="primary-input"></label>
+        </div>
+      </div> -->
       <div class="mt-10">
         <input type="text" name="first_name" placeholder="Primary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Primary color'" required class="single-input-primary">
       </div>
@@ -83,4 +75,4 @@
     {% csrf_token %}
     <p><input type="submit" value="Log in"></p>
   </form>
-
+{% endblock %}

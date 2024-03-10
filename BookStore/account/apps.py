@@ -6,4 +6,4 @@ class AccountConfig(AppConfig):
     name = 'account'
 
     def ready(self):
-        import account.signals  # Import your signals module
+        import account.utils.signals  # Import your signals module

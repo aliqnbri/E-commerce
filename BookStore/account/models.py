@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
-from account.managers import CustomUserManager
+from account.utils.managers import CustomUserManager
 from core.models import BaseModel
 from django.db import models
 
@@ -21,10 +21,10 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     otp = models.CharField(max_length=6, null=True, blank=True,editable=True,)
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default='cu')
 
-    # USERNAME_FIELD = "email"
+    USERNAME_FIELD = "email"
 
     # email and passwrod required by default
-    REQUIRED_FIELDS = ['email']
+    REQUIRED_FIELDS = ['username']
 
     objects = CustomUserManager()
 
