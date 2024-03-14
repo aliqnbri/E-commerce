@@ -2,7 +2,7 @@ from rest_framework import generics, mixins ,permissions ,authentication
 from django.shortcuts import render, get_object_or_404
 from order.forms import CartAddProductForm
 from product.models import Category, Product, Review
-from product import serializers
+from product.api import serializers
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.views import APIView
