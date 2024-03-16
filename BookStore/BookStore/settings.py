@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     'payment.apps.PaymentConfig',
     'coupon.apps.CouponConfig',
     #External Apps
-    'debug_toolbar',
+    # 'debug_toolbar',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -54,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 

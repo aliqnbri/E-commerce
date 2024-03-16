@@ -1,7 +1,7 @@
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
-from account.api import views
+from account import views
 
 urlpatterns = [
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
