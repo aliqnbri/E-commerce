@@ -1,12 +1,27 @@
-from rest_framework import generics, mixins ,permissions ,authentication
+from rest_framework import generics, mixins ,permissions ,authentication,viewsets,views ,status
 from django.shortcuts import render, get_object_or_404
 from order.forms import CartAddProductForm
 from product.models import Category, Product, Review
-from product.api import serializers
+from product import serializers
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+
+
+
+
+class ProductViewSet(viewsets.ViewSet):
+    def list(self,request):
+        pass
+    def retrive(self,request,pk=None):
+        pass
+    def update(self,request):
+        pass
+    def destroy(self,request):
+        pass
+
+
+
+
+
 
 # from product.recommender import Recommender
 class ProductListCreateAPIView(generics.ListCreateAPIView):
@@ -199,12 +214,6 @@ class ProductDeleteAPIView(generics.DestroyAPIView):
 #                 #    'recommended_products': recommended_products})
 
 
-class ProductListAPIView():
-    pass
-
-
-class ProductUpdateApiView():
-    pass
 
 
 # class ProductSearch(APIView):

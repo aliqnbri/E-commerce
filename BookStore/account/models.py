@@ -12,8 +12,8 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         ('op', 'Operator'),
         ('cu', 'Customer'),
     )    
-    username = models.CharField(max_length=50)
-    phone_number = models.CharField(max_length=13, unique=True, null=True)
+    username = None
+    phone_number = models.CharField(max_length=11, unique=True, null=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -24,7 +24,7 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
 
     # email and passwrod required by default
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['phone_number']
 
     objects = CustomUserManager()
 

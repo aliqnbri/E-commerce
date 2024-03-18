@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="{% static 'css/base.css' %}" rel="stylesheet">
+  <link rel="shortcut icon" href="img/fav.png" />
+    <!-- Author Meta -->
+    <meta name="aliqnbi" content="codepixer" />
+    <!-- Meta Description -->
+    <meta name="description" content="" />
+    <!-- Meta Keyword -->
+    <meta name="keywords" content="" />
+    <!-- meta character set -->
+    <meta charset="UTF-8" />
+    <!-- Site Title -->
+
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
+      rel="stylesheet"
+    />
+    <!--
+			CSS
+			============================================= -->
+		
+    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
+  <title>Document</title>
+</head>
+<body>
+  
+</body>
+</html>
+  <h1>Log-in</h1>
+  <p>Please, use the following form to log-in:</p>
+  <div class="col-lg-8 col-md-8">
+    <h3 class="mb-30">Form Element</h3>
+    <form action="#">
+      <div class="mt-10">
+        <input type="text" name="first_name" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" required class="single-input">
+      </div>
+      <div class="mt-10">
+        <input type="text" name="last_name" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" required class="single-input">
+      </div>
+      <div class="mt-10">
+        <input type="text" name="last_name" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" required class="single-input">
+      </div>
+      <div class="mt-10">
+        <input type="email" name="EMAIL" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="single-input">
+      </div>
+      <div class="input-group-icon mt-10">
+        <div class="icon"><i class="fa fa-thumb-tack" aria-hidden="true"></i></div>
+        <input type="text" name="address" placeholder="Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Address'" required class="single-input">
+      </div>
+      <div class="input-group-icon mt-10">
+        <div class="form-select" id="default-select"">
+        </div>
+      </div>
+      
+      <div class="mt-10">
+        <textarea class="single-textarea" placeholder="Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required></textarea>
+      </div>
+      <div class="mt-10">
+        <input type="text" name="first_name" placeholder="Primary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Primary color'" required class="single-input-primary">
+      </div>
+      <div class="mt-10">
+        <input type="text" name="first_name" placeholder="Accent color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Accent color'" required class="single-input-accent">
+      </div>
+      <div class="mt-10">
+        <input type="text" name="first_name" placeholder="Secondary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Secondary color'" required class="single-input-secondary">
+      </div>
+    </form>
+  </div>
+  <form method="post">
+    {{ form.as_p }}
+    {% csrf_token %}
+    <p><input type="submit" value="Log in"></p>
+  </form>
+

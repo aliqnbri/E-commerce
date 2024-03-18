@@ -10,7 +10,7 @@ class CustomUserManager(BaseUserManager):
     for authentication instead of usernames.
     """
 
-    def create_user(self, email, password,username=None ,phone_number=None ,**extra_fields):
+    def _create_user(self, email, password,username=None ,phone_number=None ,**extra_fields):
         """
         Create and save a user with the given email and password.
         """
@@ -21,12 +21,12 @@ class CustomUserManager(BaseUserManager):
             raise ValueError (_("The Password must be set"))    
 
         if phone_number is not None:
-            if not re.match(r'^\+98\d{10}$', phone_number):
+            if not re.match(r'^09[0-9]{9}$', phone_number):
                 raise ValidationError(_("Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
                     )    
 
         email = self.normalize_email(email)
-        user = self.model(email=email,username=username,phone_number=phone_number, **extra_fields)
+        user = self.model(email=email,phone_number=phone_number, **extra_fields)
         user.set_password(password) # change user passwoed
         user.save()
         return user
@@ -48,7 +48,7 @@ class CustomUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_("Superuser must have is_superuser=True."))
        
-        return self.create_user(email, password, **extra_fields)
+        return self._create_user(email, password, **extra_fields)
 
 
     def update_user(self, user_instance, **update_fields):

@@ -25,7 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    #Internal Apps
+    # Internal Apps
     'account.apps.AccountConfig',
     'home.apps.HomeConfig',
     'order.apps.OrderConfig',
@@ -33,14 +33,15 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'payment.apps.PaymentConfig',
     'coupon.apps.CouponConfig',
-    #External Apps
-    # 'debug_toolbar',
+    # External App
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
     'taggit',
     'corsheaders'
-    
+
 
 ]
 
@@ -53,7 +54,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    # 'debug_toolbar.middleware.DebugToolbarMiddleware',
 
 ]
 
@@ -113,9 +113,9 @@ USE_TZ = True
 
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = BASE_DIR 
+# STATIC_ROOT = BASE_DIR
 STATICFILES_DIRS = [
-    BASE_DIR / 'static', 
+    BASE_DIR / 'static',
 ]
 
 
@@ -126,13 +126,7 @@ CART_SESSION_ID = 'cart'
 AUTH_USER_MODEL = "account.CustomUser"
 
 
-# AUTHENTICATION_BACKENDS = [
-#     'django.contrib.auth.backends.ModelBackend',
-#     'account.authentications.CustomAuthentication',
-# ]
-
-
-
+# BackEnd email setting
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -141,32 +135,36 @@ EMAIL_HOST_USER = 'aliqnbri1998@gmail.com'
 EMAIL_HOST_PASSWORD = 'pkqp dktx ommv tytn'
 
 
+# rest framework setting
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
+    ], 
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 5,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
+
 
 }
 
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': True,
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
-    # 'SIGNING_KEY': setting.SECRET_KEY,
+    'SIGNING_KEY': SECRET_KEY,
     'VERIFYING_KEY': None,
     'AUDIENCE': None,
     'ISSUER': None,
     'JWK_URL': None,
     'LEEWAY': 0,
 
-    'AUTH_HEADER_TYPES': ('Bearer','JWT',),
+    'AUTH_HEADER_TYPES': ('Bearer', 'JWT',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
     'USER_ID_FIELD': 'id',
     'USER_ID_CLAIM': 'user_id',
@@ -204,7 +202,7 @@ INTERNAL_IPS = [
 ]
 
 # Stripe settings
-ZARINPAL_PUBLISHABLE_KEY = '' # Publishable key
+ZARINPAL_PUBLISHABLE_KEY = ''  # Publishable key
 ZARINPAL_SECRET_KEY = ''      # Secret key
 ZARINPAL_API_VERSION = ''
 ZARINPAL_API_KEY = ''
@@ -215,4 +213,3 @@ ZARINPAL_WEBHOOK_SECRET = ''
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 1
-

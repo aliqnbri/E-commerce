@@ -22,7 +22,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['email','phone_number']
 
     def clean_password2(self):
         cd = self.cleaned_data
@@ -40,7 +40,7 @@ class UserRegistrationForm(forms.ModelForm):
 class UserEditForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['username', 'email']
+        fields = ['email']
 
     def clean_email(self):
         data = self.cleaned_data['email']
@@ -56,14 +56,13 @@ class UserAdminCreationForm(forms.ModelForm):
     A form for creating new users. Includes all the required
     fields, plus a repeated password.
     """
-    username = forms.CharField(max_length=25)
     # phone_number = forms.CharField(max_length=13,required=False)
     password = forms.CharField(widget=forms.PasswordInput)
     password_2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
 
     class Meta:
         model = User
-        fields = ['email','username', 'password',]
+        fields = ['email', 'password',]
 
     def clean(self):
         '''
@@ -98,7 +97,7 @@ class UserAdminChangeForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email','username','phone_number' ,'password', 'is_active',]
+        fields = ['email','phone_number' ,'password', 'is_active',]
 
     def clean_password(self):
         return self.initial["password"]

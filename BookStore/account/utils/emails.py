@@ -5,6 +5,19 @@ from typing import Any
 import random
 
 
+import random
+import string
+
+def generate_otp():
+    """Generates a random OTP of the given length."""
+    otp = ''.join(random.choices(string.digits, k=6))
+    return otp
+
+
+
+
+
+
 def send_otp(email: str) -> None:
     """
     Function to send an OTP (One Time Password) to the provided email address.

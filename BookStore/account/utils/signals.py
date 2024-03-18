@@ -27,18 +27,3 @@ def create_customer_profile(sender, instance, created, **kwargs):
 
 
 
-
-
-
-
-
-
-
-
-
-@receiver(post_save,sender=CustomUser)
-def create_customer_profile(sender,instance,created,**kwargs):
-    if created and instance.role == 'cu':
-        CustomerProfile.objects.create(user=instance)
-
-

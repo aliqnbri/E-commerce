@@ -16,10 +16,21 @@ from django.utils import timezone
 from django.conf import settings
 from datetime import timedelta
 
-
 class MyObtainTokenPairView(TokenObtainPairView):
     permission_classes = (permissions.AllowAny,)
-    serializer_class = serializers.MyTokenObtainPairSerializer
+    serializer_class = serializers.MyTokenObtainPairSerializer 
+
+class RegisterAPIView(APIView):
+    def post(self,request):
+        serializer = serializers.RegisterSerializer(data=request.Post)
+        if serializer.is_valid(raise_exception=True):
+            CustomUser.objects._create_user(
+                email=serializer.validated_data['email'],
+                phone_number= serializer.validated_data['phone_number'],
+                password=serializer.validated_data['password']
+            )
+            return Response(serializer.data)
+        return Response (serializer.errors)
 
 
 class RegisterCreateAPIView(CreateAPIView):
@@ -29,7 +40,7 @@ class RegisterCreateAPIView(CreateAPIView):
     # authentication_classes = [authentications.CustomAuthentication]
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.RegisterSerializer
-    queryset = CustomUser.objects.all()
+    # queryset = CustomUser.objects.all()
     def perform_create(self,serializer):
         """
         Perform custom actions after creating a new user instance.
@@ -43,45 +54,45 @@ class RegisterCreateAPIView(CreateAPIView):
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
             if user:
-                token = Token.objects.get_or_create(user=user)
+                token,created = Token.objects.get_or_create(user=user)
     
                 token_lifetime = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
                 iran_delta = timedelta(hours=3, minutes=30)
-                data = {"message": "Register successful", "data" : {'token': token[0]}}
-                response = Response(data=data,status=status.HTTP_201_CREATED)
+                # data = {"message": "Register successful", "data" : {'token': token}}
+                response = Response({"message": "Register successful", "data" : {'token': token}},status=status.HTTP_201_CREATED)
                 response.set_cookie(
                     key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-                    value=token[0],
+                    value=token,
                     max_age=iran_delta + token_lifetime,
                     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
                     samesite=settings.SIMPLE_JWT['AUTH_COOKIE_SAMESITE']
                 )
+                print(response)
             return response
 
 
 class LoginView(APIView):
-    parser_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
     authentication_classes = [authentications.CustomAuthentication]
     def post(self, request):
         data = request.data
         email = data.get('email')
-        username = data.get('username')
         password = data.get('password')
 
-        if not username or not password or not email:
-            return Response({'error': 'Please provide username, password and Email'}, status=status.HTTP_400_BAD_REQUEST)
+        if not password or not email:
+            return Response({'error': 'Please provide password and Email'}, status=status.HTTP_400_BAD_REQUEST)
         user = CustomUser.objects.filter(email=email).first()
 
         if user is not None and user.is_active:
-            tokens = authentications.get_tokens_for_user(user)
+            tokens,created = authentications.get_tokens_for_user(user)
             token_lifetime = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
             iran_delta = timedelta(hours=3, minutes=30)
             data = {"message": "Login successful", "data": tokens}
             response = Response(data=data,status=status.HTTP_200_OK)
             response.set_cookie(
                 key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-                value=tokens["access"],
+                value=tokens['access'],
                 max_age=iran_delta + token_lifetime,
                 secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                 httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],

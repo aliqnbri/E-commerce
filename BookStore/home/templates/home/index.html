@@ -1,86 +1,85 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="{% static 'css/base.css' %}" rel="stylesheet">
-  <link rel="shortcut icon" href="img/fav.png" />
-    <!-- Author Meta -->
-    <meta name="aliqnbi" content="codepixer" />
-    <!-- Meta Description -->
-    <meta name="description" content="" />
-    <!-- Meta Keyword -->
-    <meta name="keywords" content="" />
-    <!-- meta character set -->
-    <meta charset="UTF-8" />
-    <!-- Site Title -->
+  <head>
+  	<title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <link
-      href="https://fonts.googleapis.com/css?family=Poppins:100,200,400,300,500,600,700"
-      rel="stylesheet"
-    />
-    <!--
-			CSS
-			============================================= -->
-		
-    <link rel="stylesheet" href="{% static 'css/linearicons.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/nice-select.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/animate.min.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/owl.carousel.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/main.css' %}" />
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href= "{% static 'css/style.css' %}">
+
+	</head>
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Login </h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-12 col-lg-10">
+					<div class="wrap d-md-flex">
+						{% comment %} <div class="img" style="background-image: url(images/bg-1.jpg);"> {% endcomment %}
+						<div class="img" style="background-image: url('{% static 'images/bg-1.jpg' %}');">
+			      </div>
+						<div class="login-wrap p-4 p-md-5">
+			      	<div class="d-flex">
+			      		<div class="w-100">
+			      			<h3 class="mb-4">Sign In</h3>
+			      		</div>
+								<div class="w-100">
+									<p class="social-media d-flex justify-content-end">
+										<a href="#" class="social-icon d-flex align-items-center justify-content-center"><span class="fa fa-facebook"></span></a>
+										<a href="#" class="social-icon d-flex align-items-center justify-content-center"><span class="fa fa-twitter"></span></a>
+									</p>
+								</div>
+			      	</div>
+							<form action="#" class="signin-form">
+			      		<div class="form-group mb-3">
+			      			<label class="label" for="name">Email</label>
+			      			<input type="text" class="form-control" placeholder="Enter Email" required>
+			      		</div>
+			      		<div class="form-group mb-3">
+			      			<label class="label" for="name">Phone number</label>
+			      			<input type="text" class="form-control" placeholder="Enter phone number" required>
+			      		</div>
+		            <div class="form-group mb-3">
+		            	<label class="label" for="password">Password</label>
+		              <input type="password" class="form-control" placeholder="Password" required>
+		            </div>
+		            <div class="form-group">
+		            	<button type="submit" class="form-control btn btn-primary rounded submit px-3">Sign In</button>
+		            </div>
+		            <div class="form-group d-md-flex">
+		            	<div class="w-50 text-left">
+			            	<label class="checkbox-wrap checkbox-primary mb-0">Remember Me
+									  <input type="checkbox" checked>
+									  <span class="checkmark"></span>
+										</label>
+									</div>
+									<div class="w-50 text-md-right">
+										<a href="#">Forgot Password</a>
+									</div>
+		            </div>
+		          </form>
+		          <p class="text-center">Not a member? <a data-toggle="tab" href="#signup">Sign Up</a></p>
+		        </div>
+		      </div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/popper.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="{% static 'js/login.js' %}"></script>
+	</body>
 </html>
-  <h1>Log-in</h1>
-  <p>Please, use the following form to log-in:</p>
-  <div class="col-lg-8 col-md-8">
-    <h3 class="mb-30">Form Element</h3>
-    <form action="#">
-      <div class="mt-10">
-        <input type="text" name="first_name" placeholder="First Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'First Name'" required class="single-input">
-      </div>
-      <div class="mt-10">
-        <input type="text" name="last_name" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" required class="single-input">
-      </div>
-      <div class="mt-10">
-        <input type="text" name="last_name" placeholder="Last Name" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Last Name'" required class="single-input">
-      </div>
-      <div class="mt-10">
-        <input type="email" name="EMAIL" placeholder="Email address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Email address'" required class="single-input">
-      </div>
-      <div class="input-group-icon mt-10">
-        <div class="icon"><i class="fa fa-thumb-tack" aria-hidden="true"></i></div>
-        <input type="text" name="address" placeholder="Address" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Address'" required class="single-input">
-      </div>
-      <div class="input-group-icon mt-10">
-        <div class="form-select" id="default-select"">
-        </div>
-      </div>
-      
-      <div class="mt-10">
-        <textarea class="single-textarea" placeholder="Message" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Message'" required></textarea>
-      </div>
-      <div class="mt-10">
-        <input type="text" name="first_name" placeholder="Primary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Primary color'" required class="single-input-primary">
-      </div>
-      <div class="mt-10">
-        <input type="text" name="first_name" placeholder="Accent color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Accent color'" required class="single-input-accent">
-      </div>
-      <div class="mt-10">
-        <input type="text" name="first_name" placeholder="Secondary color" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Secondary color'" required class="single-input-secondary">
-      </div>
-    </form>
-  </div>
-  <form method="post">
-    {{ form.as_p }}
-    {% csrf_token %}
-    <p><input type="submit" value="Log in"></p>
-  </form>
 
