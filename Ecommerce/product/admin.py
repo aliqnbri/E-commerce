@@ -1,19 +1,18 @@
 from django.contrib import admin
-from .models import Category, Author, Product
+from .models import Category, Product ,Brand
 from core.managers import export_to_csv
-# Register your models here.
+
 
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = [
         'name',
-        'slug',
-        'description',  # Added field to display description
+        'parent',
         'products_count',  # Added field to display product count
     ]
     list_filter = ['name']
-    # readonly_fields = ['created', 'updated']  # Added to hide fields from edit
+    readonly_fields = ['created', 'updated']  # Added to hide fields from edit
     ordering = ['name']
     search_fields = ['name',]  # Added field to search by description
     fields = ['name', 'slug', 'description']  # Reordered fields
@@ -26,39 +25,24 @@ class CategoryAdmin(admin.ModelAdmin):
     products_count.short_description = 'Number of products'
 
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display = [
-        'first_name',
-        'last_name',
-        'slug',
-        'bio',
-    ]
-    # Added filter for first and last names
-    list_filter = ['first_name', 'last_name']
-    prepopulated_fields = {'slug': ('first_name', 'last_name')}
-    search_fields = ['first_name', 'last_name',]
-    actions = [export_to_csv]
-
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
 
     list_display = [
-        'title',
-        'slug',
-        'author',
-        'isbn',
+        'name',
+        'brand',
+        'category',
         'price',
         'available',
         'created',
         'updated',
     ]
-    list_filter = ['available', 'created', 'updated', 'author']
-    list_editable = ['price', 'available',]
-    list_per_page = 10  # Set pagination to 10 items per page
-    prepopulated_fields = {'slug': ('title',)}
-    readonly_fields = ['created', 'updated']
+    list_filter = ['available', 'brand', 'category',]
+    list_editable = ['brand','category','price','available']
+    list_per_page = 10  
+    prepopulated_fields = {'slug': ('name',)}
+    readonly_fields = ['created', 'updated',]
     # Added custom actions
     actions = ['mark_as_unavailable', 'restore_availability',export_to_csv]
 
@@ -79,3 +63,11 @@ class ProductAdmin(admin.ModelAdmin):
 
     mark_as_unavailable.short_description = 'Mark as unavailable'
     restore_availability.short_description = 'Restore availability'
+
+
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']

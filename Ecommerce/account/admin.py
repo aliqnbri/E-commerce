@@ -5,7 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from account.forms import UserAdminCreationForm, UserAdminChangeForm
 from core.managers import export_to_csv
 from typing import List, Tuple ,Type ,Callable
-
+from account.models import Address, CustomerProfile
 User = get_user_model()
 
 
@@ -35,9 +35,16 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal: Tuple = ()
     actions = [export_to_csv]
 
-# admin.site.register(User,CustomUserAdmin)
 
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ['street', 'city', 'postal_code']
+    search_fields = ['street', 'city', 'postal_code']
 
+@admin.register(CustomerProfile)
+class CustomerProfileAdmin(admin.ModelAdmin):
+    list_display = ['username', 'first_name', 'last_name', 'gender']
+    search_fields = ['username', 'first_name', 'last_name']
 
 
 

@@ -32,18 +32,10 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
         return f"{self.username}"
 
 
-class CustomerProfile(BaseModel):
-    user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
-    #todo -> first_name last_name 
-    
-
-
-
 class Address(BaseModel):
     """
     Address Model for user's address 
     """
-    user = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     street = models.CharField(max_length=100)
     city = models.CharField(max_length=50)
     postal_code = models.CharField(max_length=20)
@@ -51,3 +43,25 @@ class Address(BaseModel):
 
     def __str__(self):
         return f"{self.street}, {self.city}, {self.country} - {self.postal_code}"
+
+
+
+
+
+class CustomerProfile(BaseModel):
+    class Gender(models.TextChoices):
+        MALE = 'M'
+        FEMALE = 'F'
+    user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
+    username = models.CharField(max_length=16, unique=True, null=True)
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    gender = models.CharField(max_length=6, choices=Gender.choices, null=True, blank=True)
+    avatar = models.ImageField(upload_to='media/avatars/', null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+
+    
+
+
+
+
