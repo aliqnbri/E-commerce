@@ -2,17 +2,16 @@ from django.db import models
 from core.models import BaseModel
 from django.core.validators import MinValueValidator, MinValueValidator
 from decimal import Decimal
-from django.contrib.auth import get_user_model
 from order.models import Order
+from account.models import CustomerProfile
 
-User = get_user_model()
 
 
 class Payment(BaseModel):
     """
     Payment of orders 
     """
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2, validators=[
                                  MinValueValidator(Decimal('0.00'))])

@@ -11,7 +11,7 @@ class Category(MPTTModel,BaseModel):
     """
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.PROTECT, related_name='children')
+    # parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.PROTECT, related_name='children')
     class MPTTMeta:
 
         ordering = ['name']
@@ -61,7 +61,7 @@ class Product(MPTTModel,BaseModel):
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
     review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='reviews')
-    category = TreeForeignKey('Category',null=True,blank=True,on_delete=models.SET_NULL)  # Added ForeignKey to Category
+    # category = TreeForeignKey('Category',null=True,blank=True,on_delete=models.SET_NULL)  # Added ForeignKey to Category
     class Meta:
         ordering = ('name',)
 

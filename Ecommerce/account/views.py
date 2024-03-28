@@ -4,7 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from account.utils import emails ,authentications
 from rest_framework.generics import CreateAPIView
 from rest_framework.authtoken.models import Token
-from django.shortcuts import get_object_or_404
+
 from rest_framework import permissions,status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -37,47 +37,21 @@ class MyObtainTokenPairView(TokenObtainPairView):
 
 #         send_sms_to_user.delay(request.data['phone'], otp)
 
-#         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
-
-
-
-
-
-
-
-
-class RegisterAPIView(APIView):
-    def post(self,request):
-        serializer = serializers.RegisterSerializer(data=request.Post)
-        if serializer.is_valid(raise_exception=True):
-            CustomUser.objects._create_user(
-                email=serializer.validated_data['email'],
-                phone_number= serializer.validated_data['phone_number'],
-                password=serializer.validated_data['password']
-            )
-            return Response(serializer.data)
-        return Response (serializer.errors)
+#         return Response(status=status.HTTP_204_NO_CONTEN)
 
 
 class RegisterCreateAPIView(CreateAPIView):
     """
     API view for user registration.
     """
-  
     permission_classes = [permissions.AllowAny]
     serializer_class = serializers.RegisterSerializer
+ 
+
+
     def perform_create(self,serializer):
         """
         Perform custom actions after creating a new user instance.
-
-        Args:
-            serializer: The serializer instance used for user registration.
-
-        Returns:
-            Response: The response object with registration status and token information.
         """
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
@@ -86,11 +60,22 @@ class RegisterCreateAPIView(CreateAPIView):
     
                 token_lifetime = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
                 iran_delta = timedelta(hours=3, minutes=30)
-                # data = {'token': token}
-                response = Response({"message": "Register successful", "data" : {'token': token}},status=status.HTTP_201_CREATED)
+                new_lifetime = token_lifetime + iran_delta
+                token.lifetime = new_lifetime
+                token.save()
+            
+                response_data = {
+                    "message": "Register successful",
+                    "data": {
+                        "token": token.key
+                    }
+                }
+
+
+                response = Response(response_data,status=status.HTTP_201_CREATED)
                 response.set_cookie(
                     key=settings.SIMPLE_JWT['AUTH_COOKIE'],
-                    value=token,
+                    value=token.key,
                     max_age=iran_delta + token_lifetime,
                     secure=settings.SIMPLE_JWT['AUTH_COOKIE_SECURE'],
                     httponly=settings.SIMPLE_JWT['AUTH_COOKIE_HTTP_ONLY'],
@@ -100,19 +85,15 @@ class RegisterCreateAPIView(CreateAPIView):
 
 
 class LoginView(APIView):
-    permission_classes = [permissions.AllowAny]
+    # permission_classes = [permissions.AllowAny]
     authentication_classes = [authentications.CustomAuthentication]
+    serializer_class = serializers.LoginSerializer
     def post(self, request):
         data = request.data
         email = data.get('email')
         password = data.get('password')
+        if self.serializer_class.is_valid(raise_exception=True):
 
-        if not password or not email:
-            return Response({'error': 'Please provide password and Email'}, status=status.HTTP_400_BAD_REQUEST)
-        user = CustomUser.objects.filter(email=email,password=password).first()
-  
-
-        if user is not None and user.is_active:
             tokens,created = authentications.get_tokens_for_user(user)
             token_lifetime = settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
             iran_delta = timedelta(hours=3, minutes=30)
@@ -128,10 +109,7 @@ class LoginView(APIView):
             )
             csrf.get_token(request)
             return response
-        elif user is None:
-            return Response({"error": "Invalid username or password"}, status=status.HTTP_404_NOT_FOUND)
-        else:
-            return Response({"error": "This account is not active"}, status=status.HTTP_404_NOT_FOUND)
+        Response(status=status.HTTP_404_NOT_FOUND)    
 
 
 

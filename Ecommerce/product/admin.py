@@ -15,7 +15,7 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ['created', 'updated']  # Added to hide fields from edit
     ordering = ['name']
     search_fields = ['name',]  # Added field to search by description
-    fields = ['name', 'slug', 'description']  # Reordered fields
+    fields = ['name', 'slug',]  # Reordered fields
     prepopulated_fields = {'slug': ('name',)}
     actions = [export_to_csv]
 

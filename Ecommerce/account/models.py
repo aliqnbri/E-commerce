@@ -42,7 +42,7 @@ class Address(BaseModel):
     detail = models.TextField()
 
     def __str__(self):
-        return f"{self.street}, {self.city}, {self.country} - {self.postal_code}"
+        return f"Address : {self.city} ,{self.street}, {self.postal_code}"
 
 
 
@@ -58,7 +58,7 @@ class CustomerProfile(BaseModel):
     last_name = models.CharField(max_length=30)
     gender = models.CharField(max_length=6, choices=Gender.choices, null=True, blank=True)
     avatar = models.ImageField(upload_to='media/avatars/', null=True, blank=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.CASCADE )
 
     
 

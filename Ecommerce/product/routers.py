@@ -1,5 +1,11 @@
 from rest_framework.routers import DefaultRouter
-from product.viewset import ProductViewSet , CategoryViewSet
+from product.viewset import  CategoryViewSet ,ProductViewSet
+from drf_spectacular.views import SpectacularAPIView,SpectacularSwaggerView
+
+app_name = 'product'
+
+
+
 
 router = DefaultRouter()
 router.register(r'category',CategoryViewSet,basename='category')

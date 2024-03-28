@@ -20,8 +20,8 @@ class CustomUserManager(BaseUserManager):
         if not password:
             raise ValueError (_("The Password must be set"))    
 
-        if phone_number is not None:
-            if not re.match(r'^09[0-9]{9}$', phone_number):
+        if phone_number:
+            if not re.match(r'^(\+98|0)?9\d{9}$', phone_number):
                 raise ValidationError(_("Invalid phone number format for Iran. It should start with '+98' followed by 10 digits.")
                     )    
 

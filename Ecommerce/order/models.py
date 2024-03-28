@@ -6,7 +6,7 @@ from product.models import Product
 from core.models import BaseModel
 from django.contrib.auth import get_user_model
 from coupon.models import Coupon
-User = get_user_model()
+from account.models import CustomerProfile
 
 
 
@@ -14,11 +14,11 @@ class Order(BaseModel):
     """
     Reprisent orders of customers
     """
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     is_completed = models.BooleanField(default=False)
     coupon = models.ForeignKey(Coupon,
-                               related_name='orders',
+                               related_name='order_set',
                                null=True,
                                blank=True,
                                on_delete=models.SET_NULL)

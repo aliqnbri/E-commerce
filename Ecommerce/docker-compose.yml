@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
   db:
@@ -10,16 +10,7 @@ services:
   redis:
     image: redis
 
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
-    volumes:
-      - .:/app
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-      - redis
+
 
   celery:
     build: .
@@ -38,3 +29,23 @@ services:
       - ./nginx:/etc/nginx/conf.d
     depends_on:
       - web
+
+  web:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/usr/src/app/staticfiles
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env  
+    depends_on:
+      - db
+      - redis
+      - celery
+
+
+
