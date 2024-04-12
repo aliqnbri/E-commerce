@@ -9,11 +9,11 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='product-detail', lookup_field='slug')
+    # url = serializers.HyperlinkedIdentityField(
+    #     view_name='product-detail', lookup_field='slug')
     class Meta:
         model = Product
-        fields = ['id','name','brand','available','price','url' ,'category']        
+        fields = ['name' ,'brand','description', 'price', 'review','category', 'get_absolute_url']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:

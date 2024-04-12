@@ -1,26 +1,27 @@
 from django.db import models
 from core.models import BaseModel
 from django.utils.text import slugify
-from mptt.models import TreeForeignKey, MPTTModel
 from account.models import CustomerProfile
 
 
-class Category(MPTTModel,BaseModel):
+class Category(BaseModel):
     """
     A Django model representing a book category in an online bookstore.
     """
     name = models.CharField(max_length=200, unique=True)
     slug = models.SlugField(max_length=200, unique=True)
-    # parent = TreeForeignKey('self', null=True, blank=True, on_delete=models.PROTECT, related_name='children')
-    class MPTTMeta:
-
+    parent = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True)
+    image = models.ImageField(upload_to='media/category/', blank=True, null=True)
+    
+    
+    class Meta:
         ordering = ['name']
-        indexes = [models.Index(fields=['name'])]
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
     def __str__(self):
         return self.name
+
 
     def save(self, **kwargs):
         """
@@ -31,6 +32,9 @@ class Category(MPTTModel,BaseModel):
 
 class Brand(BaseModel):
     name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
 
 
 
@@ -47,7 +51,7 @@ class Review(BaseModel):
         return f"{self.CustomerProfile.username} commets:{self.comment}"
 
 
-class Product(MPTTModel,BaseModel):
+class Product(BaseModel):
 
     """
     A Django model representing a specific product in an online bookstore.
@@ -60,8 +64,9 @@ class Product(MPTTModel,BaseModel):
     description = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     available = models.BooleanField(default=True)
-    review = models.ForeignKey(Review, on_delete=models.CASCADE, related_name='reviews')
-    # category = TreeForeignKey('Category',null=True,blank=True,on_delete=models.SET_NULL)  # Added ForeignKey to Category
+    review = models.ForeignKey(Review, null=True,blank=True, on_delete=models.CASCADE, related_name='reviews')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')    
+    
     class Meta:
         ordering = ('name',)
 
@@ -75,7 +80,11 @@ class Product(MPTTModel,BaseModel):
 
 
     def __str__(self):
-        return self.title
+        return self.name
+
+    def get_absolute_url(self):
+        return f'/{self.category.slug}/{self.slug}/'
+        
 
 
 class WishList(models.Model):

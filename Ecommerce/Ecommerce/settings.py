@@ -8,7 +8,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = True
 
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -27,12 +26,13 @@ INSTALLED_APPS = [
     'payment.apps.PaymentConfig',
 
     # External App
+    'celery',
     'corsheaders',
+    'django_redis',
     'rest_framework',
     'drf_spectacular',
     'rest_framework_simplejwt',
     "rest_framework.authtoken",
-    'rest_framework_simplejwt.token_blacklist',
 
 
 ]
@@ -59,11 +59,10 @@ DATABASES = {
 }
 
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR/ 'templates'],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -98,7 +97,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+# TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -131,7 +131,7 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # rest framework setting
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'],
+        'rest_framework.permissions.AllowAny'],
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 5,
@@ -139,7 +139,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',),
 
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',    
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 SPECTACULAR_SETTINGS = {
@@ -147,17 +147,15 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Your project description',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
- 
+
 }
-
-
 
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=30),
     'ROTATE_REFRESH_TOKENS': True,
-    'BLACKLIST_AFTER_ROTATION': True,
+    'BLACKLIST_AFTER_ROTATION': False,
     'UPDATE_LAST_LOGIN': False,
     'ALGORITHM': 'HS256',
     'SIGNING_KEY': SECRET_KEY,
@@ -195,28 +193,22 @@ SIMPLE_JWT = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+
 INTERNAL_IPS = [
     # ...
     "127.0.0.1",
     # ...
 ]
 
-# Stripe settings
-ZARINPAL_PUBLISHABLE_KEY = ''  # Publishable key
-ZARINPAL_SECRET_KEY = ''      # Secret key
-ZARINPAL_API_VERSION = ''
-ZARINPAL_API_KEY = ''
-ZARINPAL_WEBHOOK_SECRET = ''
+# # Stripe settings
+# ZARINPAL_PUBLISHABLE_KEY = ''  # Publishable key
+# ZARINPAL_SECRET_KEY = ''      # Secret key
+# ZARINPAL_API_VERSION = ''
+# ZARINPAL_API_KEY = ''
+# ZARINPAL_WEBHOOK_SECRET = ''
 
 
-
-ALLOWED_HOSTS = []
-
-
-
-
-
-
+# ALLOWED_HOSTS = []
 
 
 # DATABASES = {
@@ -226,22 +218,13 @@ ALLOWED_HOSTS = []
 #         'USER': config('DB_USER'),
 #         'PASSWORD': config('DB_PASS'),
 #         'HOST': config('DB_HOST'),
-        # 'PORT': '5432',
+# 'PORT': '5432',
 #     }
 # }
 
 # Redis settings
 REDIS_HOST = config('REDIS_HOST', default='127.0.0.1')
 REDIS_PORT = config('REDIS_PORT', default='6379')
-REDIS_PASS = config('REDIS_PASS', default='')
+REDIS_PASS = config('REDIS_PASS')
 REDIS_LOCATION = f'redis://{REDIS_HOST}:{REDIS_PORT}' if not REDIS_PASS else \
     f'redis://default:{REDIS_PASS}@{REDIS_HOST}:{REDIS_PORT}'
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': REDIS_LOCATION,
-        'KEY_PREFIX': 'Ecommerce',
-        'TIMEOUT': None
-    },
-}

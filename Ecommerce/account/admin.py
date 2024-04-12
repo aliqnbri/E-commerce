@@ -43,8 +43,8 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(CustomerProfile)
 class CustomerProfileAdmin(admin.ModelAdmin):
-    list_display = ['username', 'first_name', 'last_name', 'gender']
-    search_fields = ['username', 'first_name', 'last_name']
+    list_display = ['first_name', 'last_name', 'gender']
+    search_fields = ['first_name', 'last_name']
 
 
 

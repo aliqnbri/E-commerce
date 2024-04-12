@@ -16,7 +16,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
-        write_only=True, style={'input_type': 'password'})
+        write_only=True,  style={'input_type': 'password'}) #todo you can use password validator min_length=8, max_length=128,
     password2 = serializers.CharField(
         write_only=True, style={'input_type': 'password'})
 
@@ -25,39 +25,43 @@ class RegisterSerializer(serializers.ModelSerializer):
         fields = ('phone_number', 'email', 'password', 'password2')
 
     def validate(self, attrs):
+
+        
         email = attrs.get('email')
         phone_number = attrs.get('phone_number')
         password = attrs.get('password')
         password2 = attrs.get('password2')
 
+         # Check if both passwords are the same
         if password != password2:
                 raise serializers.ValidationError(
                     {'password': 'Passwords do not match.'})    
 
     
-        if CustomUser.objects.filter(email=email).exists() or CustomUser.objects.filter(phone_number=phone_number).exists():
+        if CustomUser.objects.filter(email=email).exists():
             raise serializers.ValidationError(
-                {'email': 'Email already exists.' if email else 'Phone number already exists.'})
+                {'email': 'Email already exists.'})
 
+        if CustomUser.objects.filter(phone_number=phone_number).exists():
+            raise serializers.ValidationError(
+                {'phone_number': 'Phone number already exists.'})
+
+        attrs.pop('password2')  # Remove password2 from attributes since it is
+        return attrs
         
 
-        return attrs
-
     def create(self, validated_data):
-    
-        validated_data.pop('password2')
         user = CustomUser.objects._create_user(**validated_data)
         user.set_password(validated_data.get('password'))
-        user.save()
+        # user.save()
         return user
 
     def update(self, instance, validated_data):
- 
-        validated_data.pop('password2')
+
         instance.email = validated_data.get('email')
         instance.password = validated_data.get('password')
         instance.phone_number = validated_data.get('phone_number')
-
+        instance.save()
         return instance
 
 
@@ -75,10 +79,13 @@ class LoginSerializer(serializers.Serializer):
             self.context['request'], email=email, password=password)
 
         if user is not None:
-            self.context['user'] = user
-            return attrs
-
-        raise serializers.ValidationError('Invalid email or password.')
+            if user.is_active:
+                self.context['user'] = user
+                return attrs
+            else:
+                raise serializers.ValidationError('User is not active or is locked out.')
+        else:
+            raise serializers.ValidationError('Invalid email or password.')
 
 
 
@@ -106,3 +113,22 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
         
         return representation
 
+
+
+
+from account.utils.emails import send_otp 
+class VerifyOtpSerialiser(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField()
+
+    def validate_email(self, value):
+        user = CustomUser.objects.filter(email=value).first()
+        if not user:
+            raise serializers.ValidationError("User not found")
+        return value
+
+    def create(self, validated_data):
+        email = validated_data['email']
+        user = User.objects.filter(email=email).first()
+        otp = send_otp(email=email)
+        return {"email": email, "otp": otp}

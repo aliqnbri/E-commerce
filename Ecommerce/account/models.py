@@ -6,19 +6,18 @@ from core.models import BaseModel
 from django.db import models
 
 
-class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
+class CustomUser( AbstractBaseUser, PermissionsMixin,BaseModel):
     ROLE_CHOICES = (
         ('ad', 'Admin'),
         ('op', 'Operator'),
         ('cu', 'Customer'),
     )    
-    username = None
-    phone_number = models.CharField(max_length=11, unique=True, null=True)
+    username = models.CharField(max_length=16, unique=True, null=True,)
+    phone_number = models.CharField(max_length=11, null=True)
     email = models.EmailField(unique=True)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6, null=True, blank=True,editable=True,)
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default='cu')
 
     USERNAME_FIELD = "email"
@@ -29,7 +28,11 @@ class CustomUser(BaseModel, AbstractBaseUser, PermissionsMixin):
     objects = CustomUserManager()
 
     def __str__(self):
-        return f"{self.username}"
+        return f"{self.email}"
+
+
+    def tokens(self):
+        pass    
 
 
 class Address(BaseModel):
@@ -41,7 +44,7 @@ class Address(BaseModel):
     postal_code = models.CharField(max_length=20)
     detail = models.TextField()
 
-    def __str__(self):
+    def get_address(self):
         return f"Address : {self.city} ,{self.street}, {self.postal_code}"
 
 
@@ -53,15 +56,24 @@ class CustomerProfile(BaseModel):
         MALE = 'M'
         FEMALE = 'F'
     user = models.OneToOneField(CustomUser ,on_delete=models.CASCADE)
-    username = models.CharField(max_length=16, unique=True, null=True)
-    first_name = models.CharField(max_length=30)
-    last_name = models.CharField(max_length=30)
+    first_name = models.CharField(max_length=30, verbose_name='First Name')
+    last_name = models.CharField(max_length=30,verbose_name='Last Name')
     gender = models.CharField(max_length=6, choices=Gender.choices, null=True, blank=True)
     avatar = models.ImageField(upload_to='media/avatars/', null=True, blank=True)
     address = models.ForeignKey(Address, null=True, blank=True, on_delete=models.CASCADE )
 
+
+
+    @property
+    def get_full_name(self):
+        return f'{self.first_name} {self.last_name}'
+
+    @property
+    def get_username(self):
+        return f'{self.username}'
     
 
+    
 
 
 
