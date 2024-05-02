@@ -21,6 +21,10 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+    
+    # def get_absolute_url(self):
+    #     return reverse("product:category_list", args=[self.slug])
+    
 
 
     def save(self, **kwargs):

@@ -115,20 +115,12 @@ class CustomerProfileSerializer(serializers.ModelSerializer):
 
 
 
+from Ecommerce.redis_cllient import redis_client
+cache = redis_client()
 
-from account.utils.emails import send_otp 
+
 class VerifyOtpSerialiser(serializers.Serializer):
+    otp = serializers.CharField(max_length=6, required=True)
     email = serializers.EmailField()
-    otp = serializers.CharField()
+   
 
-    def validate_email(self, value):
-        user = CustomUser.objects.filter(email=value).first()
-        if not user:
-            raise serializers.ValidationError("User not found")
-        return value
-
-    def create(self, validated_data):
-        email = validated_data['email']
-        user = User.objects.filter(email=email).first()
-        otp = send_otp(email=email)
-        return {"email": email, "otp": otp}

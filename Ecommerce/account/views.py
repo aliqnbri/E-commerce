@@ -1,13 +1,6 @@
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
-from account.utils import emails, authentications
-from rest_framework.generics import CreateAPIView
-from rest_framework.authtoken.models import Token
 from rest_framework import permissions, status
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from account.models import CustomUser
 from account import serializers
 from django.shortcuts import render
 from django.middleware import csrf
@@ -20,31 +13,21 @@ from Ecommerce.redis_cllient import redis_client
 
 
 
-
 class RegisterUserView(GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = serializers.RegisterSerializer
 
     def post(self, request):
-        user_data = request.data
-        serializer = self.serializer_class(data=user_data)
+        serializer = self.serializer_class(data=request.data)
         if serializer.is_valid(raise_exception=True):
             user = serializer.save()
-            email = user_data['email']
+            email = user.email
+
             # send verification mail to the registered user
             send_otp(email=email)
 
-            return Response({"message": f"register successful \n OTP code sent to {email}"}, status=status.HTTP_201_CREATED)
+            return Response({"message": f"register successful ! Verify code sent to {email}"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-
-
-class MyObtainTokenPairView(TokenObtainPairView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = serializers.MyTokenObtainPairSerializer
-
 
 
 
@@ -53,23 +36,14 @@ class VerifyOtp(GenericAPIView):
     permission_classes = [permissions.AllowAny,]
 
     def post(self, request):
-        data = request.data
-        email = data['email']
-        otp = send_otp(email) 
-        return Response({"data": {email: otp}})
-
-    def get(self,request):
-        data = request.data
-        email = data['email']
-        stored_otp = cache.get(email)
-        if not stored_otp:
-            raise serializers.ValidationError("OTP has expired or invalid")
-
-        if check_otp(email=email,otp=stored_otp):
-            
-
-
-            return Response({"data":otp })    
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            email = serializer.validated_data['email']
+            otp = serializer.validated_data['otp']
+           
+            if check_otp(email=email, otp=otp):
+                return Response({"message": "your Account verified"} ,status=status.HTTP_202_ACCEPTED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
 
 
@@ -80,6 +54,10 @@ class VerifyOtp(GenericAPIView):
 
 
 
+
+class MyObtainTokenPairView(TokenObtainPairView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = serializers.MyTokenObtainPairSerializer
 
 
 

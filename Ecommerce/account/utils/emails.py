@@ -1,30 +1,24 @@
-import redis
 from django.core.mail import send_mail
-from account.models import CustomUser
-import string
-import random
-import time
+import string ,random ,time
 from django.conf import settings
 from celery import shared_task
 from typing import Any
 from Ecommerce.redis_cllient import redis_client
-
-
+cache = redis_client()
 
 
 # @shared_task
 def send_otp(email: str) -> None:
     """
     Function to send an OTP (One Time Password) to the provided email address.
-
     """
     subject: str = 'Register Verification'
     otp: str = ''.join(random.choices(string.digits, k=6))  # Generate a 6-digit OTP
+    print(otp)
 
     # Cache the OTP and its expiration time (2 minutes)
     cache = redis_client()
     cache.set(email, otp, ex=120)
-    print(cache.get(email))
     
 
     message: str = f'Your verification OTP is: {otp}'
@@ -37,7 +31,12 @@ def send_otp(email: str) -> None:
 
 
 def check_otp(email: str, otp: str) -> bool:
+
     cached_otp = cache.get(email)
+    
+    if cached_otp is None:
+        raise ValueError ("OTP has not been sent or has expired")
+    
     if cached_otp == otp:
         cache.delete(email)
         return True
@@ -87,62 +86,62 @@ def check_otp(email: str, otp: str) -> bool:
 
 
 
-import random
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
+# import random
+# from rest_framework import serializers
+# from django.contrib.auth import get_user_model
 
-User = get_user_model()
+# User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('id', 'email', 'username', 'first_name', 'last_name')
+# class UserSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = User
+#         fields = ('id', 'email', 'username', 'first_name', 'last_name')
 
-class OTPSerializer(serializers.Serializer):
-    email = serializers.EmailField()
+# class OTPSerializer(serializers.Serializer):
+#     email = serializers.EmailField()
 
-    def validate_email(self, value):
-        user = User.objects.filter(email=value).first()
-        if not user:
-            user = User.objects.create(
-                username="Username",
-                email=value,
-            )
-            user.save()
-        self.user = user
-        return value
+#     def validate_email(self, value):
+#         user = User.objects.filter(email=value).first()
+#         if not user:
+#             user = User.objects.create(
+#                 username="Username",
+#                 email=value,
+#             )
+#             user.save()
+#         self.user = user
+#         return value
 
-    def generate_otp(self):
-        return random.randint(100000, 999999)
+#     def generate_otp(self):
+#         return random.randint(100000, 999999)
 
-    def save(self):
-        otp = self.generate_otp()
-        cache_key = f"otp:{self.user.email}"
-        redis_client = get_redis_connection("default")
-        redis_client.setex(cache_key, 120, otp)
-        return self.user
+#     def save(self):
+#         otp = self.generate_otp()
+#         cache_key = f"otp:{self.user.email}"
+#         redis_client = get_redis_connection("default")
+#         redis_client.setex(cache_key, 120, otp)
+#         return self.user
 
-class CompleteRegisterSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    otp = serializers.CharField()
+# class CompleteRegisterSerializer(serializers.Serializer):
+#     email = serializers.EmailField()
+#     otp = serializers.CharField()
 
-    def validate_otp(self, value):
-        cache_key = f"otp:{self.initial_data['email']}"
-        redis_client = get_redis_connection("default")
-        stored_otp = redis_client.get(cache_key)
-        if not stored_otp:
-            raise serializers.ValidationError("OTP has expired or invalid")
+#     def validate_otp(self, value):
+#         cache_key = f"otp:{self.initial_data['email']}"
+#         redis_client = get_redis_connection("default")
+#         stored_otp = redis_client.get(cache_key)
+#         if not stored_otp:
+#             raise serializers.ValidationError("OTP has expired or invalid")
 
-        if int(value) != int(stored_otp.decode()):
-            raise serializers.ValidationError("Invalid OTP")
+#         if int(value) != int(stored_otp.decode()):
+#             raise serializers.ValidationError("Invalid OTP")
 
-        # Delete the OTP from the cache
-        redis_client.delete(cache_key)
+#         # Delete the OTP from the cache
+#         redis_client.delete(cache_key)
 
-        return value
+#         return value
 
-    def save(self, *args, **kwargs):
-        user = self.user
-        user.set_password(self.initial_data['password'])
-        user.save()
-        return user
+#     def save(self, *args, **kwargs):
+#         user = self.user
+#         user.set_password(self.initial_data['password'])
+#         user.save()
+#         return user
